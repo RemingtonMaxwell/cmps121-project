@@ -6,8 +6,6 @@ import android.content.pm.PackageManager;
 import android.Manifest;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.location.LocationManager;
 import android.content.Context;
 import android.widget.Toast;
@@ -17,9 +15,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import java.util.Random;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnInfoWindowClickListener, OnMapReadyCallback {
 
     private GoogleMap mMap;
     final Context context = this;
@@ -63,32 +63,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 public boolean onMyLocationButtonClick() {
                     LocationManager mgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                     if (!mgr.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                        Toast.makeText(context, "GPS is disabled!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "GPS is disabled", Toast.LENGTH_SHORT).show();
                     }
                     return false;
                 }
             });
         } else {
             // Alert if permissions not available
-            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-            alertDialog.setTitle("Error");
-            alertDialog.setMessage("Something went wrong");
-            alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    // here you can add functions
-                }
-            });
-            alertDialog.setIcon(R.mipmap.ic_launcher);
-            alertDialog.show();
+            Toast.makeText(this, "Permission not available", Toast.LENGTH_SHORT).show();
         }
+        mMap.setOnInfoWindowClickListener(this);
     }
 
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        // TODO: make it so it goes to the appropriate Overheards screen
+        Toast.makeText(this, "Info window clicked", Toast.LENGTH_SHORT).show();
+    }
+
+
     public void addLocation(View v) {
+        // TODO: make it so it displays points from the database
         Random r = new Random();
         float lat = r.nextFloat() * (37.05f - 36.95f) + 36.95f;
         float lon = r.nextFloat() * (122.05f - 121.95f) + 121.95f;
-        LatLng santaCruz2 = new LatLng(lat, -lon);
-        mMap.addMarker(new MarkerOptions().position(santaCruz2).title("Here is some information"));
+        LatLng SANTA_CRUZ_2 = new LatLng(lat, -lon);
+        // TODO: add a custom marker view
+        Marker santaCruz2 = mMap.addMarker(new MarkerOptions()
+                .position(SANTA_CRUZ_2)
+                .title("Some information")
+                .snippet("Even more information"));
     }
 
 }
