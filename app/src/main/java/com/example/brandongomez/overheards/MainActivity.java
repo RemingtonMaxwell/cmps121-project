@@ -1,6 +1,8 @@
 package com.example.brandongomez.overheards;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -8,6 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.content.Intent;
 
@@ -20,6 +23,7 @@ import com.example.brandongomez.overheards.TwoFragment;
 import com.example.brandongomez.overheards.ThreeFragment;
 import com.example.brandongomez.overheards.FourFragment;
 import com.example.brandongomez.overheards.FiveFragment;
+import com.firebase.client.Firebase;
 
 /*
     Tab design from:
@@ -31,21 +35,25 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Intent intent=getIntent();
+        Log.i("Main Activity user id", intent.getStringExtra(LoginActivity.USER_ID));
+        //checking user preferences
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences.Editor e = settings.edit();
+        String id = settings.getString("user_id", null);
+        Log.i("Main Activity", intent.getStringExtra(LoginActivity.USER_ID));
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
     }
 
     private void setupViewPager(ViewPager viewPager) {
