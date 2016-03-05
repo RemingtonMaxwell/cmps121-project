@@ -18,12 +18,15 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import android.location.Address;
-import java.util.Random;
 import java.util.List;
 import java.util.ArrayList;
 import java.io.IOException;
 import android.location.Geocoder;
 import java.util.Locale;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 public class MapsActivity extends FragmentActivity implements OnInfoWindowClickListener, OnMapReadyCallback{
 
@@ -42,6 +45,34 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         geocoder = new Geocoder(this, Locale.getDefault());
+        Firebase.setAndroidContext(this);
+        Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/users");
+        // Attach an listener to read the data at our posts reference
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                //System.out.println("There are " + snapshot.getChildrenCount() + " users");
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    User user = postSnapshot.getValue(User.class);
+                    //System.out.println(user.getEmailAddress());
+                    for (int i = 0; i < user.getLocations().size(); i++) {
+                        addMarker(user.getLocations().get(i).getLatitude(),
+                                user.getLocations().get(i).getLongitude(),
+                                user.getEmailAddress(),
+                                "HI");
+                    }
+                    //System.out.println(user.getUser_id());
+                    //use this to check user id
+                    //something happening in logactivity-not creating user in authentication
+                    //but yet user is in database
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+            }
+        });
 
     }
 
@@ -135,16 +166,12 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
         }
     }
 
-    public void addMarkers(){
-        // TODO: make it so it displays points from the database
-        Random r = new Random();
-        float lat = r.nextFloat() * (37.05f - 36.95f) + 36.95f;
-        float lon = r.nextFloat() * (122.05f - 121.95f) + 121.95f;
-        LatLng RAND_POINT = new LatLng(lat, -lon);
-        Marker randMaker = mMap.addMarker(new MarkerOptions()
-                .position(RAND_POINT)
-                .title("USER NAME")
-                .snippet("OVERHEARD")
+    public void addMarker(double lat, double lon, String username, String overheard){
+        LatLng POINT = new LatLng(lat, lon);
+        Marker Mark = mMap.addMarker(new MarkerOptions()
+                .position(POINT)
+                .title(username)
+                .snippet(overheard)
                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
     }
 

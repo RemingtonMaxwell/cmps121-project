@@ -21,8 +21,8 @@ public class User {
     public User(String emailAddress, String user_id){// String user_id){
      this.emailAddress=emailAddress;
         this.user_id=user_id;
-        //locations.add(new Location(100,-127));
-        //locations.add(new Location(50,100));
+        locations.add(new Location(100,-127));
+        locations.add(new Location(50,100));
      //this.user_id=user_id;
     }
     public User() {
