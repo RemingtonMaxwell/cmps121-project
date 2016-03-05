@@ -18,11 +18,10 @@ public class User {
     private List<Post> posts = new ArrayList<Post>();
     private List<Location> locations=new ArrayList<Location>();
 
-    public User(String emailAddress, String user_id){// String user_id){
+    public User(String emailAddress, String user_id,Location currentLocation){// String user_id){
      this.emailAddress=emailAddress;
         this.user_id=user_id;
-        //locations.add(new Location(100,-127));
-        //locations.add(new Location(50,100));
+        this.currentLocation=currentLocation;
      //this.user_id=user_id;
     }
     public User() {
@@ -35,12 +34,24 @@ public class User {
       return emailAddress;
     }
 
+    public void setEmailAddress(String newEmailAddress){
+        emailAddress=newEmailAddress;
+    }
+
     public String getFirstName(){
         return firstName;
     }
 
+    public void setFirstName(String newFirstName){
+        firstName=newFirstName;
+    }
+
     public String getLastName(){
         return lastName;
+    }
+
+    public void setLastName(String newLastName){
+        lastName=newLastName;
     }
 
     public String getUser_id(){
@@ -55,8 +66,32 @@ public class User {
         return posts;
     }
 
+    public void addPost(Post newPost){
+        posts.add(newPost);
+    }
+
+    public void removePost(Post post){
+        for(int i=0;i<posts.size();i++){
+            if(posts.get(i).equals(post)){
+                posts.remove(post);
+            }
+        }
+    }
+
     public List<Location> getLocations(){
         return locations;
+    }
+
+    public void addLocation(Location newLocation){
+        locations.add(newLocation);
+    }
+
+    public void removeLocation(Location location){
+        for (int i=0;i<locations.size();i++){
+            if(locations.get(i).equals(location)){
+                locations.remove(location);
+            }
+        }
     }
 
 }

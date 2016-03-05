@@ -16,6 +16,7 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+
 public class OneFragment extends Fragment {
     protected View mView;
     public OneFragment() {
@@ -50,20 +51,20 @@ public class OneFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 System.out.println("There are " + snapshot.getChildrenCount() + " users");
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                /*for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                     User user = postSnapshot.getValue(User.class);
                     System.out.println(user.getEmailAddress());
                     for (int i=0;i<user.getLocations().size();i++){
                         System.out.println(user.getLocations().get(i));
                     }
-                    System.out.println(user.getUser_id());
+                    /*System.out.println(user.getUser_id());
                     //use this to check user id
                     //something happening in logactivity-not creating user in authentication
                     //but yet user is in database
                     if((user.getUser_id()).compareTo("5f0febec-83d3-492a-a679-c8fc26a2964b")==0) {
                         test.setText(user.getEmailAddress());
-                    }
-                }
+                    }*/
+                //}
             }
             @Override
             public void onCancelled(FirebaseError firebaseError) {

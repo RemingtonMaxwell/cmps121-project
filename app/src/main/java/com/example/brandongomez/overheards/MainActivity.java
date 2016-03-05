@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Intent intent=getIntent();
+        Firebase.setAndroidContext(this);
         Log.i("Main Activity user id", intent.getStringExtra(LoginActivity.USER_ID));
         //checking user preferences
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);

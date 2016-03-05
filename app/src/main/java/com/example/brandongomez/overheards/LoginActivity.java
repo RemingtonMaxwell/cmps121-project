@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.*;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -22,6 +23,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,8 +37,17 @@ import android.widget.TextView;
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.ValueEventListener;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationServices;
+
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,9 +56,11 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, ConnectionCallbacks, OnConnectionFailedListener {
     public static final String EMAIL="email";
     public static final String USER_ID="user_id";
+    private GoogleApiClient mGoogleApiClient;
+
     /**
      * Id to identity READ_CONTACTS permission request.
      */
@@ -70,6 +83,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private String LOG_TAG="overheards";
+    private Location currentLoc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,8 +119,58 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        //Get location
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+    }
+    @Override
+    protected void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+    @Override
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        android.location.Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (mLastLocation != null) {
+            currentLoc=new Location(mLastLocation.getLatitude(),mLastLocation.getLongitude());
+        }else{
+            Log.i(LOG_TAG, "Location is null.");
+        }
+        Log.i(LOG_TAG, "Location services connected.");
     }
 
+    @Override
+    public void onConnectionSuspended(int cause) {
+        Log.i(LOG_TAG, "Location services suspended. Please reconnect.");
+        // The connection has been interrupted.
+        // Disable any UI components that depend on Google APIs
+        // until onConnected() is called.
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        Log.i("", "Location services failed.");
+        // This callback is important for handling errors that
+        // may occur while attempting to connect with Google.
+        //
+        // More about this in the 'Handle Connection Failures' section.
+        //...
+    }
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;
@@ -384,10 +449,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
         }
     }
-    public void callMainActivity(String email, String user_id){
-        Intent intent = new Intent(this,MainActivity.class);
+    public void callMainActivity(String email, final String user_id){
+        final Intent intent = new Intent(this,MainActivity.class);
         intent.putExtra(EMAIL,email);
         intent.putExtra(USER_ID,user_id);
+        final String emailAddress=email;
         //save user id in preferences
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         final SharedPreferences.Editor e = settings.edit();
@@ -397,11 +463,33 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             e.commit();
         }
         //fill in user information
-        Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
-        Firebase ref=database.child("users").child(user_id);
-        User user= new User(email,user_id);
-        ref.setValue(user);
-        startActivity(intent);
+        final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/users");
+        //first see if user already exists in database
+
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if(snapshot.hasChild(user_id)){
+                    Firebase ref=database.child(user_id).child("currentLocation");
+                    Map<String, Object> updateUser = new HashMap<String, Object>();
+                    updateUser.put("latitude",currentLoc.getLatitude());
+                    updateUser.put("longitude", currentLoc.getLongitude());
+                    ref.updateChildren(updateUser);
+                    Log.i(LOG_TAG, "user already exists");
+                }else{
+                    Log.i(LOG_TAG,"new user");
+                    User user= new User(emailAddress,user_id,currentLoc);
+                    Firebase ref=database.child(user_id);
+                    ref.setValue(user);
+                }
+                startActivity(intent);
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
     }
     public void callLoginActivity(){
         Intent intent = new Intent(this,LoginActivity.class);
