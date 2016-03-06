@@ -23,8 +23,23 @@
     <string-array name="categories">
         <item>humor</item>
         <item>news</item>
-        <item>announcements</item>
+        <item>buzz</item>
         <item>gossip</item>
         <item>events</item>
+    </string-array>
+
+    <string-array name="selecting">
+        <item>all</item>
+        <item>humor</item>
+        <item>news</item>
+        <item>buzz</item>
+        <item>gossip</item>
+        <item>events</item>
+    </string-array>
+
+    <string-array name="time">
+        <item>today</item>
+        <item>this month</item>
+        <item>this year</item>
     </string-array>
 </resources>

@@ -3,21 +3,15 @@ package com.example.brandongomez.overheards;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -29,22 +23,21 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import com.example.brandongomez.overheards.Post;
 import com.example.brandongomez.overheards.Location;
-
 import com.example.brandongomez.overheards.R;
 import com.example.brandongomez.overheards.OneFragment;
 import com.example.brandongomez.overheards.TwoFragment;
 import com.example.brandongomez.overheards.ThreeFragment;
 import com.example.brandongomez.overheards.FourFragment;
 import com.example.brandongomez.overheards.FiveFragment;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
-
-
 
 /*
     Tab design from:
@@ -57,7 +50,6 @@ public class MainActivity extends AppCompatActivity{
     private ViewPager viewPager;
     String user_id;
     double latitude, longitude;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,10 +68,6 @@ public class MainActivity extends AppCompatActivity{
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-
-        Button postButton = (Button) findViewById(R.id.submit);
-        postButton.setEnabled(false);
-
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -118,7 +106,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     public void mapButton(View v){
-        Intent intent = new Intent(this, MapsActivityDisplay.class);
+        Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
     }
 
@@ -140,13 +128,15 @@ public class MainActivity extends AppCompatActivity{
         String spinnerText = spinner.getSelectedItem().toString();
         final Location loc = new Location(36, -121);
         Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
-        Firebase ref = database.child("users").child(getIntent().getExtras().getString("user_id").child("location"));
-        database.addValueEventListener(new ValueEventListener() {
+        System.out.println(getIntent().getExtras().getString("user_id"));
+        Firebase ref = database.child("users").child(getIntent().getExtras().getString("user_id")).child("currentLocation");
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                latitude = snapshot.getValue("latitude");
-                longitude = snapshot.getValue("longitude");
-                loc = new location (latitude, longitude);
+                latitude = (double)snapshot.child("latitude").getValue();
+                longitude = (double)snapshot.child("longitude").getValue();
+                loc.setLatitide(latitude);
+                loc.setLongitude(longitude);
             }
             @Override
             public void onCancelled(FirebaseError firebaseError) {
@@ -156,7 +146,7 @@ public class MainActivity extends AppCompatActivity{
         Post p = new Post(overheard, user_id, loc, spinnerText, dateStr);
         ref = database.child("posts").child(p.getPost_id());
         ref.setValue(p);
-
+        Toast.makeText(this, "Overheard posted", Toast.LENGTH_SHORT).show();
     }
 
     public void submitOverheard(View v){
@@ -171,14 +161,16 @@ public class MainActivity extends AppCompatActivity{
         int min = timeDescription.getCurrentMinute();
         final Location loc = new Location(36, -121);
         Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
-        Firebase ref = database.child("users").child(getIntent().getExtras().getString("user_id").child("location"));
-        database.addValueEventListener(new ValueEventListener() {
+        Firebase ref = database.child("users").child(getIntent().getExtras().getString("user_id")).child("currentLocation");
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                latitude = snapshot.getValue("latitude");
-                longitude = snapshot.getValue("longitude");
-                loc = new location(latitude, longitude);
+                latitude = (double) snapshot.child("latitude").getValue();
+                longitude = (double) snapshot.child("longitude").getValue();
+                loc.setLatitide(latitude);
+                loc.setLongitude(longitude);
             }
+
             @Override
             public void onCancelled(FirebaseError firebaseError) {
 

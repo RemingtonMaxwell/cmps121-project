@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.location.LocationManager;
 import android.content.Context;
+import android.widget.Spinner;
 import android.widget.Toast;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -25,12 +26,21 @@ import android.location.Geocoder;
 import java.util.Locale;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
+import java.util.Calendar;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.AdapterView;
+import java.text.DateFormat;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.SimpleTimeZone;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-public class MapsActivity extends FragmentActivity implements OnInfoWindowClickListener, OnMapReadyCallback{
+public class MapsActivity extends FragmentActivity implements OnInfoWindowClickListener, OnMapReadyCallback, OnItemSelectedListener{
 
     private GoogleMap mMap;
     final Context context = this;
@@ -38,10 +48,12 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
     LatLng latLng;
     Geocoder geocoder;
     String post_id;
+    boolean posted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_maps);
         try {
             Bundle extras = getIntent().getExtras();
@@ -56,20 +68,61 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         geocoder = new Geocoder(this, Locale.getDefault());
-
-        /*
         Firebase.setAndroidContext(this);
-        Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/posts/");
+        Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/posts");
         // Attach an listener to read the data at our posts reference
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Post post = postSnapshot.getValue(Post.class);
-                        addMarker(post.getLocation().getLatitude(),
-                                post.getLocation().getLongitude(),
-                                post.getUser_id(),
-                                "HI");
+                    String[] ids = TimeZone.getAvailableIDs(-8 * 60 * 60 * 1000);
+                    SimpleTimeZone pdt = new SimpleTimeZone(-8 * 60 * 60 * 1000, ids[0]);
+                    GregorianCalendar date = new GregorianCalendar(pdt);
+                    Spinner spinner = (Spinner)findViewById(R.id.timeSpinner);
+                    String spinnerText = spinner.getSelectedItem().toString();
+                    String dateHeard = post.getDate_heard();
+                    String[] parsedDateHeard = dateHeard.split("/");
+                    String[] parsedTimeHeard = parsedDateHeard[2].split(" ");
+                    Spinner typeSpinner = (Spinner)findViewById(R.id.categorySpinner);
+                    String typeSpinnerText = typeSpinner.getSelectedItem().toString();
+                    String typePosted = post.getType();
+                    if(spinnerText.equals("this year")){
+                        if(Integer.valueOf(parsedDateHeard[0]) == date.get(Calendar.YEAR)){
+                            if(typeSpinnerText.equals(typePosted) || typeSpinnerText.equals("all")) {
+                                addMarker(post.getLocation().getLatitude(),
+                                        post.getLocation().getLongitude(),
+                                        post.getUser_id(),
+                                        post.getContent());
+                            }
+                        }
+                    }
+                    if (spinnerText.equals("this month")){
+                        if(Integer.valueOf(parsedDateHeard[0]) == date.get(Calendar.YEAR)){
+                            if(Integer.valueOf(parsedDateHeard[1]) == (date.get(Calendar.MONTH) + 1)) {
+                                if(typeSpinnerText.equals(typePosted) || typeSpinnerText.equals("all")) {
+                                    addMarker(post.getLocation().getLatitude(),
+                                            post.getLocation().getLongitude(),
+                                            post.getUser_id(),
+                                            post.getContent());
+                                }
+                            }
+                        }
+                    }
+                    if (spinnerText.equals("today")){
+                        if(Integer.valueOf(parsedDateHeard[0]) == date.get(Calendar.YEAR)) {
+                            if(Integer.valueOf(parsedDateHeard[1]) == (date.get(Calendar.MONTH) + 1)) {
+                                if(Integer.valueOf(parsedTimeHeard[0]) == date.get(Calendar.DAY_OF_MONTH)) {
+                                    if(typeSpinnerText.equals(typePosted) || typeSpinnerText.equals("all")) {
+                                        addMarker(post.getLocation().getLatitude(),
+                                                post.getLocation().getLongitude(),
+                                                post.getUser_id(),
+                                                post.getContent());
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
@@ -78,7 +131,6 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
                 System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
-        */
 
     }
 
@@ -94,6 +146,10 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Spinner spin = (Spinner) findViewById(R.id.timeSpinner);
+        spin.setOnItemSelectedListener(this);
+        Spinner spin2 = (Spinner) findViewById(R.id.categorySpinner);
+        spin2.setOnItemSelectedListener(this);
         mMap = googleMap;
 
         // Checks to see if permissions are available
@@ -106,7 +162,7 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
                 public boolean onMyLocationButtonClick() {
                     LocationManager mgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                     if (!mgr.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                        Toast.makeText(context, "GPS is disabled", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, "GPS is disabled", Toast.LENGTH_SHORT).show();
                     }
                     return false;
                 }
@@ -119,7 +175,7 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
         // drops a marker and gets the address of the marker
-        if(post_id != null) {
+        if(post_id != null && posted == false) {
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
                 public void onMapClick(LatLng point) {
@@ -140,7 +196,7 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
                         for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
                             sb.append(address.getAddressLine(i) + "\n");
                         }
-                        Toast.makeText(MapsActivity.this, sb.toString(), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(MapsActivity.this, sb.toString(), Toast.LENGTH_LONG).show();
                     }
 
                     //remove previously placed Marker
@@ -148,34 +204,41 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
                         marker.remove();
                     }
 
-                    //place marker where user just clicked
-                    marker = mMap.addMarker(new MarkerOptions()
-                            .position(point)
-                            .title("Marker")
-                            .title("USER NAME")
-                            .snippet("OVERHEARD")
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
+                    if(posted == false) {
+                        //place marker where user just clicked
+                        marker = mMap.addMarker(new MarkerOptions()
+                                .position(point)
+                                .title("Marker")
+                                .title("USER NAME")
+                                .snippet("OVERHEARD")
+                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
 
 
-                    final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/posts");
-                    database.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot snapshot) {
-                            if (snapshot.hasChild(post_id)) {
-                                Firebase ref = database.child(post_id).child("location");
-                                Map<String, Object> updateMap = new HashMap<String, Object>();
-                                updateMap.put("latitude", latLng.latitude);
-                                updateMap.put("longitude", latLng.longitude);
-                                ref.updateChildren(updateMap);
+                        final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/posts");
+                        database.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot snapshot) {
+                                if (snapshot.hasChild(post_id)) {
+                                    Firebase ref = database.child(post_id).child("location");
+                                    Map<String, Object> updateMap = new HashMap<String, Object>();
+                                    updateMap.put("latitude", latLng.latitude);
+                                    updateMap.put("longitude", latLng.longitude);
+                                    ref.updateChildren(updateMap);
+                                    Post post = snapshot.getValue(Post.class);
+                                    marker.setTitle(post.getUser_id());
+                                    marker.setSnippet(post.getContent());
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onCancelled(FirebaseError firebaseError) {
+                            @Override
+                            public void onCancelled(FirebaseError firebaseError) {
 
-                        }
-                    });
+                            }
 
+                        });
+                        Toast.makeText(context, "Overheard posted", Toast.LENGTH_SHORT).show();
+                    }
+                    posted = true;
                 }
             });
         }
@@ -204,6 +267,77 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
                 .title(username)
                 .snippet(overheard)
                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
+    }
+
+    public void onItemSelected (AdapterView < ? > parent, View view,int pos, long id){
+        Firebase.setAndroidContext(this);
+        Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/posts");
+        mMap.clear();
+        // Attach an listener to read the data at our posts reference
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    Post post = postSnapshot.getValue(Post.class);
+                    String[] ids = TimeZone.getAvailableIDs(-8 * 60 * 60 * 1000);
+                    SimpleTimeZone pdt = new SimpleTimeZone(-8 * 60 * 60 * 1000, ids[0]);
+                    GregorianCalendar date = new GregorianCalendar(pdt);
+                    Spinner spinner = (Spinner) findViewById(R.id.timeSpinner);
+                    String spinnerText = spinner.getSelectedItem().toString();
+                    String dateHeard = post.getDate_heard();
+                    String[] parsedDateHeard = dateHeard.split("/");
+                    String[] parsedTimeHeard = parsedDateHeard[2].split(" ");
+                    Spinner typeSpinner = (Spinner)findViewById(R.id.categorySpinner);
+                    String typeSpinnerText = typeSpinner.getSelectedItem().toString();
+                    String typePosted = post.getType();
+                    if (spinnerText.equals("this year")) {
+                        if (Integer.valueOf(parsedDateHeard[0]) == date.get(Calendar.YEAR)) {
+                            if(typeSpinnerText.equals(typePosted) || typeSpinnerText.equals("all")) {
+                                addMarker(post.getLocation().getLatitude(),
+                                        post.getLocation().getLongitude(),
+                                        post.getUser_id(),
+                                        post.getContent());
+                            }
+                        }
+                    }
+                    if (spinnerText.equals("this month")) {
+                        if (Integer.valueOf(parsedDateHeard[0]) == date.get(Calendar.YEAR)) {
+                            if (Integer.valueOf(parsedDateHeard[1]) == (date.get(Calendar.MONTH) + 1)) {
+                                if(typeSpinnerText.equals(typePosted) || typeSpinnerText.equals("all")) {
+                                    addMarker(post.getLocation().getLatitude(),
+                                            post.getLocation().getLongitude(),
+                                            post.getUser_id(),
+                                            post.getContent());
+                                }
+                            }
+                        }
+                    }
+                    if (spinnerText.equals("today")) {
+                        if (Integer.valueOf(parsedDateHeard[0]) == date.get(Calendar.YEAR)) {
+                            if (Integer.valueOf(parsedDateHeard[1]) == (date.get(Calendar.MONTH) + 1)) {
+                                if (Integer.valueOf(parsedTimeHeard[0]) == date.get(Calendar.DAY_OF_MONTH)) {
+                                    if(typeSpinnerText.equals(typePosted) || typeSpinnerText.equals("all")) {
+                                        addMarker(post.getLocation().getLatitude(),
+                                                post.getLocation().getLongitude(),
+                                                post.getUser_id(),
+                                                post.getContent());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+            }
+        });
+    }
+
+    public void onNothingSelected(AdapterView parent) {
+        System.out.println("LISTENER WORKED");
     }
 
 }
