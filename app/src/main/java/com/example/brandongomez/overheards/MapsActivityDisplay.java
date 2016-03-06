@@ -30,26 +30,18 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-public class MapsActivity extends FragmentActivity implements OnInfoWindowClickListener, OnMapReadyCallback{
+public class MapsActivityDisplay extends FragmentActivity implements OnInfoWindowClickListener, OnMapReadyCallback{
 
     private GoogleMap mMap;
     final Context context = this;
     Marker marker;
     LatLng latLng;
     Geocoder geocoder;
-    String post_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        try {
-            Bundle extras = getIntent().getExtras();
-            post_id = extras.getString("message_id");
-        }
-        catch (Exception e) {
-
-        }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -57,19 +49,19 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
         mapFragment.getMapAsync(this);
         geocoder = new Geocoder(this, Locale.getDefault());
 
-        /*
         Firebase.setAndroidContext(this);
-        Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/posts/");
+        Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/posts");
         // Attach an listener to read the data at our posts reference
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                System.out.print(snapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Post post = postSnapshot.getValue(Post.class);
-                        addMarker(post.getLocation().getLatitude(),
-                                post.getLocation().getLongitude(),
-                                post.getUser_id(),
-                                "HI");
+                    addMarker(post.getLocation().getLatitude(),
+                            post.getLocation().getLongitude(),
+                            post.getUser_id(),
+                            post.getContent());
                 }
             }
 
@@ -78,7 +70,6 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
                 System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
-        */
 
     }
 
@@ -118,67 +109,6 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
         mMap.setOnInfoWindowClickListener(this);
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
-        // drops a marker and gets the address of the marker
-        if(post_id != null) {
-            mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                @Override
-                public void onMapClick(LatLng point) {
-                    //save current location
-                    latLng = point;
-
-                    List<Address> addresses = new ArrayList<>();
-                    try {
-                        addresses = geocoder.getFromLocation(point.latitude, point.longitude, 1);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    android.location.Address address = addresses.get(0);
-
-                    if (address != null) {
-                        StringBuilder sb = new StringBuilder();
-                        for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-                            sb.append(address.getAddressLine(i) + "\n");
-                        }
-                        Toast.makeText(MapsActivity.this, sb.toString(), Toast.LENGTH_LONG).show();
-                    }
-
-                    //remove previously placed Marker
-                    if (marker != null) {
-                        marker.remove();
-                    }
-
-                    //place marker where user just clicked
-                    marker = mMap.addMarker(new MarkerOptions()
-                            .position(point)
-                            .title("Marker")
-                            .title("USER NAME")
-                            .snippet("OVERHEARD")
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
-
-
-                    final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/posts");
-                    database.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot snapshot) {
-                            if (snapshot.hasChild(post_id)) {
-                                Firebase ref = database.child(post_id).child("location");
-                                Map<String, Object> updateMap = new HashMap<String, Object>();
-                                updateMap.put("latitude", latLng.latitude);
-                                updateMap.put("longitude", latLng.longitude);
-                                ref.updateChildren(updateMap);
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(FirebaseError firebaseError) {
-
-                        }
-                    });
-
-                }
-            });
-        }
     }
 
     @Override
