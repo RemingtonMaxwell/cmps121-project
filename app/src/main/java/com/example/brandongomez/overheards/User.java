@@ -17,12 +17,12 @@ public class User {
     private Location currentLocation;
     private List<Post> posts = new ArrayList<Post>();
     private List<Location> locations=new ArrayList<Location>();
+    private List<Comment> comments = new ArrayList<Comment>();
 
     public User(String emailAddress, String user_id,Location currentLocation){// String user_id){
      this.emailAddress=emailAddress;
         this.user_id=user_id;
         this.currentLocation=currentLocation;
-     //this.user_id=user_id;
     }
     public User() {
         // empty default constructor, necessary for Firebase to be able to deserialize users
@@ -90,6 +90,22 @@ public class User {
         for (int i=0;i<locations.size();i++){
             if(locations.get(i).equals(location)){
                 locations.remove(location);
+            }
+        }
+    }
+
+    public List<Comment> getComments(){
+        return comments;
+    }
+
+    public void addComment(Comment newComment){
+        comments.add(newComment);
+    }
+
+    public void removeComment(Comment comment){
+        for (int i=0; i<comments.size();i++){
+            if(comments.get(i).equals(comment)){
+                comments.remove(comment);
             }
         }
     }

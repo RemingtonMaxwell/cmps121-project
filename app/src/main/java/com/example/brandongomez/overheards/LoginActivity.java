@@ -33,6 +33,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
@@ -62,6 +63,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public static final String PASSWORD="password";
     private GoogleApiClient mGoogleApiClient;
 
+
     /**
      * Id to identity READ_CONTACTS permission request.
      */
@@ -86,14 +88,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
     private String LOG_TAG="overheards";
     private Location currentLoc;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         //set up database
         Firebase.setAndroidContext(this);
-        Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
+        final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -385,10 +386,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-            final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
             boolean createAccount=true;
             try {
                 // Simulate network access.
+                final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
                 database.authWithPassword(mEmail, mPassword, new Firebase.AuthResultHandler() {
                     @Override
                     public void onAuthenticated(AuthData authData) {
@@ -411,6 +412,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 System.out.println("Error Connecting");
                 return false;
             }
+            final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
                 database.createUser(mEmail, mPassword, new Firebase.ValueResultHandler<Map<String, Object>>() {
                     @Override
                     public void onSuccess(Map<String, Object> result) {
@@ -514,6 +516,40 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public void callLoginActivity(){
         Intent intent = new Intent(this,LoginActivity.class);
         startActivity(intent);
+    }
+
+    public void forgotPassword(View v){
+        final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/users");
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot users: snapshot.getChildren()) {
+                    User user = users.getValue(User.class);
+                    if((user.getEmailAddress()).compareTo(mEmailView.getText().toString())==0){
+                        database.resetPassword(mEmailView.getText().toString(), new Firebase.ResultHandler() {
+                            @Override
+                            public void onSuccess() {
+                                Log.i(LOG_TAG, "success");
+                                Toast.makeText(getApplicationContext(), "Please Check Your Email.", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onError(FirebaseError firebaseError) {
+                                Toast.makeText(getApplicationContext(), "Error sending email.", Toast.LENGTH_SHORT).show();
+                                Log.i(LOG_TAG, "failure");
+                            }
+                        });
+                     }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+            }
+        });
+
+
     }
 }
 
