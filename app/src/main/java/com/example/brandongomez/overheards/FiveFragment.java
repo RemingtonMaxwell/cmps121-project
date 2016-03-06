@@ -8,13 +8,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.brandongomez.overheards.R;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class FiveFragment extends Fragment {
     protected View mView;
@@ -46,24 +51,22 @@ public class FiveFragment extends Fragment {
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                TextView first_name = (TextView) mView.findViewById(R.id.settings_first_name);
+                EditText first_name = (EditText) mView.findViewById(R.id.settings_first_name);
                 //first name
-                ((TextView) mView.findViewById(R.id.settings_first_name)).setText((String) snapshot.child("firstName").getValue());
+                ((EditText) mView.findViewById(R.id.settings_first_name)).setText((String) snapshot.child("firstName").getValue());
                 //last name
-                ((TextView) mView.findViewById(R.id.settings_last_name)).setText((String)snapshot.child("lastName").getValue());
+                ((EditText) mView.findViewById(R.id.settings_last_name)).setText((String) snapshot.child("lastName").getValue());
                 //user name
-                ((TextView) mView.findViewById(R.id.settings_user_name)).setText((String)snapshot.child("userName").getValue());
+                ((EditText) mView.findViewById(R.id.settings_user_name)).setText((String) snapshot.child("userName").getValue());
                 //email address
-                ((TextView) mView.findViewById(R.id.settings_email_address)).setText((String)snapshot.child("emailAddress").getValue());
-        }
-        @Override
+                ((EditText) mView.findViewById(R.id.settings_email_address)).setText((String) snapshot.child("emailAddress").getValue());
+            }
+
+            @Override
             public void onCancelled(FirebaseError firebaseError) {
                 System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
     }
 
-    public void updateFirstName(View view){
-
-    }
 }
