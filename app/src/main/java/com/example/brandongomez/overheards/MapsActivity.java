@@ -10,6 +10,11 @@ import android.location.LocationManager;
 import android.content.Context;
 import android.widget.Spinner;
 import android.widget.Toast;
+import android.location.Geocoder;
+import android.location.Address;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.AdapterView;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -18,23 +23,18 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import android.location.Address;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.io.IOException;
-import android.location.Geocoder;
 import java.util.Locale;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import java.util.Calendar;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.AdapterView;
-import java.text.DateFormat;
-import java.util.Date;
-import java.text.SimpleDateFormat;
 import java.util.SimpleTimeZone;
+
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
