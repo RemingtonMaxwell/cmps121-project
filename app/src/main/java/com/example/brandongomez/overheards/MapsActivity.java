@@ -53,7 +53,6 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_maps);
         try {
             Bundle extras = getIntent().getExtras();
@@ -62,7 +61,6 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
         catch (Exception e) {
 
         }
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
