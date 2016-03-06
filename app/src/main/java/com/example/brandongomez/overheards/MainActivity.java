@@ -28,6 +28,7 @@ import com.example.brandongomez.overheards.TwoFragment;
 import com.example.brandongomez.overheards.ThreeFragment;
 import com.example.brandongomez.overheards.FourFragment;
 import com.example.brandongomez.overheards.FiveFragment;
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -167,10 +168,13 @@ public class MainActivity extends AppCompatActivity {
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                Firebase ref = database.child(getIntent().getExtras().getString("user_id"));
+                final Firebase ref = database.child(getIntent().getExtras().getString("user_id"));
                 Map<String, Object> updateSettings = new HashMap<String, Object>();
-                EditText emailAddress=(EditText)findViewById(R.id.settings_email_address);
+                final EditText emailAddress = (EditText) findViewById(R.id.settings_email_address);
                 updateSettings.put("emailAddress", emailAddress.getText().toString());
+                Firebase refUser = new Firebase("https://vivid-heat-3338.firebaseio.com/users/" + getIntent().getStringExtra(LoginActivity.USER_ID));
+                updateUserEmailAddress();
+                //send updates to server
                 ref.updateChildren(updateSettings);
                 Toast.makeText(getApplicationContext(), "Updated!", Toast.LENGTH_SHORT).show();
             }
@@ -178,6 +182,40 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCancelled(FirebaseError firebaseError) {
 
+            }
+        });
+    }
+
+    public void updateUserEmailAddress(){
+        //get the old email and password
+        final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/users");
+        final Firebase ref = database.child(getIntent().getExtras().getString("user_id"));
+                final EditText emailAddress=(EditText)findViewById(R.id.settings_email_address);
+                ref.changeEmail(getIntent().getStringExtra(LoginActivity.EMAIL), getIntent().getStringExtra(LoginActivity.PASSWORD), emailAddress.getText().toString(), new Firebase.ResultHandler() {
+                    @Override
+                    public void onSuccess() {
+                        // email changed
+                        System.out.println("email changed");
+                    }
+
+                    @Override
+                    public void onError(FirebaseError firebaseError) {
+                        // error encountered
+                    }
+                });
+    }
+    public void updatePassword(View v){
+        final Firebase ref = new Firebase("https://vivid-heat-3338.firebaseio.com");
+        final EditText password = (EditText) findViewById(R.id.settings_password);
+        ref.changePassword(getIntent().getExtras().getString("email"), getIntent().getExtras().getString("password"), password.getText().toString(), new Firebase.ResultHandler() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(getApplicationContext(), "Updated!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(FirebaseError firebaseError) {
+                // error encountered
             }
         });
     }

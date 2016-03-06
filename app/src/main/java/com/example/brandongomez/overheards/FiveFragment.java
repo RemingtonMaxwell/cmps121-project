@@ -51,7 +51,6 @@ public class FiveFragment extends Fragment {
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                EditText first_name = (EditText) mView.findViewById(R.id.settings_first_name);
                 //first name
                 ((EditText) mView.findViewById(R.id.settings_first_name)).setText((String) snapshot.child("firstName").getValue());
                 //last name
@@ -60,6 +59,8 @@ public class FiveFragment extends Fragment {
                 ((EditText) mView.findViewById(R.id.settings_user_name)).setText((String) snapshot.child("userName").getValue());
                 //email address
                 ((EditText) mView.findViewById(R.id.settings_email_address)).setText((String) snapshot.child("emailAddress").getValue());
+                //password
+                ((EditText) mView.findViewById(R.id.settings_password)).setText(getActivity().getIntent().getExtras().getString("password"));
             }
 
             @Override

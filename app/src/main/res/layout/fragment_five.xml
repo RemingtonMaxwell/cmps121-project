@@ -45,6 +45,13 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Email"
                 android:id="@+id/label_email_address" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Password"
+                android:id="@+id/textView" />
         </LinearLayout>
 
         <LinearLayout
@@ -95,6 +102,13 @@
                 android:layout_alignParentStart="true"
                 android:inputType="textEmailAddress" />
 
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:ems="10"
+                android:id="@+id/settings_password" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -129,7 +143,14 @@
                 android:text="Update"
                 android:id="@+id/edit_email_address"
                 android:onClick="updateEmailAddress"/>
-            
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Update"
+                android:id="@+id/edit_password"
+                android:onClick="updatePassword"/>
+
         </LinearLayout>
     </LinearLayout>
 

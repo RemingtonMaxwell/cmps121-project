@@ -59,6 +59,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, ConnectionCallbacks, OnConnectionFailedListener {
     public static final String EMAIL="email";
     public static final String USER_ID="user_id";
+    public static final String PASSWORD="password";
     private GoogleApiClient mGoogleApiClient;
 
     /**
@@ -391,12 +392,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 database.authWithPassword(mEmail, mPassword, new Firebase.AuthResultHandler() {
                     @Override
                     public void onAuthenticated(AuthData authData) {
-                        System.out.println("User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
-                        callMainActivity(mEmail,authData.getUid());
+                        callMainActivity(mEmail,authData.getUid(),mPassword);
                     }
                     @Override
                     public void onAuthenticationError(FirebaseError firebaseError) {
-
                         if (firebaseError.getCode()==FirebaseError.INVALID_PASSWORD){
                             mEmailView.setError("Invalid Password");
                             callLoginActivity();
@@ -415,8 +414,27 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 database.createUser(mEmail, mPassword, new Firebase.ValueResultHandler<Map<String, Object>>() {
                     @Override
                     public void onSuccess(Map<String, Object> result) {
-                        System.out.println("Successfully created user account with uid: " + result.get("uid"));
-                        callMainActivity(mEmail, result.get("uid").toString());
+                        // Simulate network access.
+                        database.authWithPassword(mEmail, mPassword, new Firebase.AuthResultHandler() {
+                            @Override
+                            public void onAuthenticated(AuthData authData) {
+                                callMainActivity(mEmail, authData.getUid(), mPassword);
+                            }
+
+                            @Override
+                            public void onAuthenticationError(FirebaseError firebaseError) {
+
+                                if (firebaseError.getCode() == FirebaseError.INVALID_PASSWORD) {
+                                    mEmailView.setError("Invalid Password");
+                                    callLoginActivity();
+                                } else if (firebaseError.getCode() == FirebaseError.INVALID_EMAIL) {
+                                    mEmailView.setError("Invalid Email");
+                                    callLoginActivity();
+                                }
+
+                            }
+                        });
+                        //callMainActivity(mEmail, result.get("uid").toString(),result.g);
                     }
 
                     @Override
@@ -449,10 +467,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
         }
     }
-    public void callMainActivity(String email, final String user_id){
+    public void callMainActivity(String email, final String user_id, String password){
         final Intent intent = new Intent(this,MainActivity.class);
         intent.putExtra(EMAIL,email);
         intent.putExtra(USER_ID,user_id);
+        intent.putExtra(PASSWORD,password);
         final String emailAddress=email;
         //save user id in preferences
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
@@ -469,21 +488,22 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                if(snapshot.hasChild(user_id)){
-                    Firebase ref=database.child(user_id).child("currentLocation");
+                if (snapshot.hasChild(user_id)) {
+                    Firebase ref = database.child(user_id).child("currentLocation");
                     Map<String, Object> updateUser = new HashMap<String, Object>();
-                    updateUser.put("latitude",currentLoc.getLatitude());
+                    updateUser.put("latitude", currentLoc.getLatitude());
                     updateUser.put("longitude", currentLoc.getLongitude());
                     ref.updateChildren(updateUser);
                     Log.i(LOG_TAG, "user already exists");
-                }else{
-                    Log.i(LOG_TAG,"new user");
-                    User user= new User(emailAddress,user_id,currentLoc);
-                    Firebase ref=database.child(user_id);
+                } else {
+                    Log.i(LOG_TAG, "new user");
+                    User user = new User(emailAddress, user_id, currentLoc);
+                    Firebase ref = database.child(user_id);
                     ref.setValue(user);
                 }
                 startActivity(intent);
             }
+
             @Override
             public void onCancelled(FirebaseError firebaseError) {
 
