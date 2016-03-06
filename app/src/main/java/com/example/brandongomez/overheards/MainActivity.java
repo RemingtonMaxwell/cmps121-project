@@ -1,31 +1,37 @@
 package com.example.brandongomez.overheards;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import android.Manifest;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.content.Intent;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
-import android.location.LocationManager;
-import android.content.Context;
-import android.location.LocationListener;
+import android.widget.Spinner;
 
 import com.example.brandongomez.overheards.Post;
 import com.example.brandongomez.overheards.Location;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import com.example.brandongomez.overheards.R;
 import com.example.brandongomez.overheards.OneFragment;
@@ -37,6 +43,9 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+
+
+
 /*
     Tab design from:
     http://www.androidhive.info/2015/09/android-material-design-working-with-tabs/
@@ -47,6 +56,8 @@ public class MainActivity extends AppCompatActivity{
     private TabLayout tabLayout;
     private ViewPager viewPager;
     String user_id;
+    double latitude, longitude;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +76,9 @@ public class MainActivity extends AppCompatActivity{
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        Button postButton = (Button) findViewById(R.id.submit);
+        postButton.setEnabled(false);
 
     }
 
@@ -108,6 +122,43 @@ public class MainActivity extends AppCompatActivity{
         startActivity(intent);
     }
 
+    public void submitWithCurr(View v){
+        EditText txtDescription = (EditText)findViewById(R.id.overheard);
+        DatePicker dateDescription = (DatePicker)findViewById(R.id.datePicker);
+        TimePicker timeDescription = (TimePicker)findViewById(R.id.timePicker);
+        String overheard = txtDescription.getText().toString();
+        int year = dateDescription.getYear();
+        int month = dateDescription.getMonth();
+        int dayOfMonth = dateDescription.getDayOfMonth();
+        int hour = timeDescription.getCurrentHour();
+        int min = timeDescription.getCurrentMinute();
+        GregorianCalendar date = new GregorianCalendar(year, month, dayOfMonth, hour, min, 0);
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+        fmt.setCalendar(date);
+        String dateStr = fmt.format(date.getTime());
+        Spinner spinner = (Spinner)findViewById(R.id.spinner);
+        String spinnerText = spinner.getSelectedItem().toString();
+        final Location loc = new Location(36, -121);
+        Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
+        Firebase ref = database.child("users").child(getIntent().getExtras().getString("user_id").child("location"));
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                latitude = snapshot.getValue("latitude");
+                longitude = snapshot.getValue("longitude");
+                loc = new location (latitude, longitude);
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+        Post p = new Post(overheard, user_id, loc, spinnerText, dateStr);
+        ref = database.child("posts").child(p.getPost_id());
+        ref.setValue(p);
+
+    }
+
     public void submitOverheard(View v){
         EditText txtDescription = (EditText)findViewById(R.id.overheard);
         DatePicker dateDescription = (DatePicker)findViewById(R.id.datePicker);
@@ -116,16 +167,36 @@ public class MainActivity extends AppCompatActivity{
         int year = dateDescription.getYear();
         int month = dateDescription.getMonth();
         int dayOfMonth = dateDescription.getDayOfMonth();
-        //int hour = timeDescription.getHour();
-        //int min = timeDescription.getMinute();
-        Location loc = new Location(36, -122);
-        Date date = new Date(year - 1900, month, dayOfMonth);
-        Post p = new Post(overheard, user_id, loc, "funny", date.toString());
+        int hour = timeDescription.getCurrentHour();
+        int min = timeDescription.getCurrentMinute();
+        final Location loc = new Location(36, -121);
         Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
-        Firebase ref = database.child("posts").child(p.getPost_id());
+        Firebase ref = database.child("users").child(getIntent().getExtras().getString("user_id").child("location"));
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                latitude = snapshot.getValue("latitude");
+                longitude = snapshot.getValue("longitude");
+                loc = new location(latitude, longitude);
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+        GregorianCalendar date = new GregorianCalendar(year, month, dayOfMonth, hour, min, 0);
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+        fmt.setCalendar(date);
+        String dateStr = fmt.format(date.getTime());
+        Spinner spinner = (Spinner)findViewById(R.id.spinner);
+        String spinnerText = spinner.getSelectedItem().toString();
+        Post p = new Post(overheard, user_id, loc, spinnerText, dateStr);
+        database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
+        ref = database.child("posts").child(p.getPost_id());
         ref.setValue(p);
         Intent intent = new Intent(this, MapsActivity.class);
         intent.putExtra("message_id", p.getPost_id());
         startActivity(intent);
     }
+
 }
