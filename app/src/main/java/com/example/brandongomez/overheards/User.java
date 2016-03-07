@@ -19,10 +19,14 @@ public class User {
     private List<Location> locations=new ArrayList<Location>();
     private List<Comment> comments = new ArrayList<Comment>();
 
-    public User(String emailAddress, String user_id,Location currentLocation){// String user_id){
-     this.emailAddress=emailAddress;
+    public User(String emailAddress, String user_id,Location currentLocation, String firstName,
+                String lastName, String userName){
+        this.emailAddress=emailAddress;
         this.user_id=user_id;
         this.currentLocation=currentLocation;
+        this.firstName=firstName;
+        this.lastName=lastName;
+        this.userName=userName;
     }
     public User() {
         // empty default constructor, necessary for Firebase to be able to deserialize users
@@ -36,6 +40,14 @@ public class User {
 
     public void setEmailAddress(String newEmailAddress){
         emailAddress=newEmailAddress;
+    }
+
+    public String getUserName(){
+        return userName;
+    }
+
+    public void setUserName(String newUserName){
+        userName=newUserName;
     }
 
     public String getFirstName(){

@@ -50,7 +50,7 @@ public class OneFragment extends Fragment {
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                System.out.println("There are " + snapshot.getChildrenCount() + " users");
+                //System.out.println("There are " + snapshot.getChildrenCount() + " users");
                 /*for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                     User user = postSnapshot.getValue(User.class);
                     System.out.println(user.getEmailAddress());

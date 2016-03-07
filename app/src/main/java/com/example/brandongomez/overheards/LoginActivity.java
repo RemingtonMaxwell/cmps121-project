@@ -398,11 +398,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     @Override
                     public void onAuthenticationError(FirebaseError firebaseError) {
                         if (firebaseError.getCode()==FirebaseError.INVALID_PASSWORD){
-                            mEmailView.setError("Invalid Password");
-                            callLoginActivity();
-                        }else if (firebaseError.getCode()==FirebaseError.INVALID_EMAIL){
-                            mEmailView.setError("Invalid Email");
-                            callLoginActivity();
+                            callLoginActivity(0);
+                        }else{
+                            callLoginActivity(1);
                         }
 
                     }
@@ -413,7 +411,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
             final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
-                database.createUser(mEmail, mPassword, new Firebase.ValueResultHandler<Map<String, Object>>() {
+                /*database.createUser(mEmail, mPassword, new Firebase.ValueResultHandler<Map<String, Object>>() {
                     @Override
                     public void onSuccess(Map<String, Object> result) {
                         // Simulate network access.
@@ -427,11 +425,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             public void onAuthenticationError(FirebaseError firebaseError) {
 
                                 if (firebaseError.getCode() == FirebaseError.INVALID_PASSWORD) {
-                                    mEmailView.setError("Invalid Password");
-                                    callLoginActivity();
+                                    callLoginActivity(0);
                                 } else if (firebaseError.getCode() == FirebaseError.INVALID_EMAIL) {
-                                    mEmailView.setError("Invalid Email");
-                                    callLoginActivity();
+                                    callLoginActivity(1);
                                 }
 
                             }
@@ -443,7 +439,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     public void onError(FirebaseError firebaseError) {
                         // there was an error
                     }
-                });
+                });*/
 
 
             // TODO: register the new account here.
@@ -490,19 +486,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                if (snapshot.hasChild(user_id)) {
+                //if (snapshot.hasChild(user_id)) {
                     Firebase ref = database.child(user_id).child("currentLocation");
                     Map<String, Object> updateUser = new HashMap<String, Object>();
                     updateUser.put("latitude", currentLoc.getLatitude());
                     updateUser.put("longitude", currentLoc.getLongitude());
                     ref.updateChildren(updateUser);
                     Log.i(LOG_TAG, "user already exists");
-                } else {
+               /* } else {
                     Log.i(LOG_TAG, "new user");
-                    User user = new User(emailAddress, user_id, currentLoc);
+                    User user = new User(emailAddress, user_id, currentLoc,);
                     Firebase ref = database.child(user_id);
                     ref.setValue(user);
-                }
+                }*/
                 startActivity(intent);
             }
 
@@ -513,9 +509,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
 
     }
-    public void callLoginActivity(){
+    public void callLoginActivity(int val){
         Intent intent = new Intent(this,LoginActivity.class);
-        startActivity(intent);
+        if(val==0) {
+            Toast.makeText(getApplicationContext(), "Email and password do not match.", Toast.LENGTH_SHORT).show();
+            startActivity(intent);
+        }else{
+            Intent intentReg = new Intent(this,RegisterUser.class);
+            intentReg.putExtra(EMAIL,mEmailView.getText().toString());
+            intentReg.putExtra(PASSWORD,mPasswordView.getText().toString());
+            intentReg.putExtra("latitude",currentLoc.getLatitude());
+            intentReg.putExtra("longitude",currentLoc.getLongitude());
+            Log.i(LOG_TAG, "here"+EMAIL+" "+PASSWORD);
+            startActivity(intentReg);
+
+        }
     }
 
     public void forgotPassword(View v){
@@ -523,14 +531,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                System.out.println("There are " + snapshot.getChildrenCount() + " users");
+                boolean emailExists=false;
                 for (DataSnapshot users: snapshot.getChildren()) {
                     User user = users.getValue(User.class);
                     if((user.getEmailAddress()).compareTo(mEmailView.getText().toString())==0){
+                        emailExists=true;
                         database.resetPassword(mEmailView.getText().toString(), new Firebase.ResultHandler() {
                             @Override
                             public void onSuccess() {
                                 Log.i(LOG_TAG, "success");
                                 Toast.makeText(getApplicationContext(), "Please Check Your Email.", Toast.LENGTH_SHORT).show();
+                                return;
                             }
 
                             @Override
@@ -540,6 +552,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             }
                         });
                      }
+                }
+                if(!emailExists){
+                    Toast.makeText(getApplicationContext(), "Email not found.", Toast.LENGTH_SHORT).show();
                 }
 
             }
