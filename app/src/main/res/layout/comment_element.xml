@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/postborder"
+    >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/c_imageView"
+        android:adjustViewBounds="true"
+        android:maxWidth="60dp"
+        android:maxHeight="60dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/flanfox"
+        android:layout_marginLeft="17dp"
+        android:layout_marginTop="17dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:text="New Text"
+        android:id="@+id/c_username"
+        android:layout_toRightOf="@+id/c_imageView"
+        android:layout_toEndOf="@+id/c_imageView"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_alignTop="@+id/c_imageView"
+        android:layout_marginLeft="30dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:text="New Text"
+        android:id="@+id/c_timestamp"
+        android:layout_below="@+id/c_username"
+        android:layout_alignLeft="@+id/c_username"
+        android:layout_alignStart="@+id/c_username" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/c_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_below="@+id/c_imageView"
+        android:layout_alignLeft="@+id/c_imageView"
+        android:layout_alignStart="@+id/c_imageView"
+        android:layout_marginRight="30dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/c_whitespace"
+        android:layout_below="@+id/c_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+</RelativeLayout>
