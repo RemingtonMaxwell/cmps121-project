@@ -1,5 +1,6 @@
 package com.example.brandongomez.overheards;
 
+import android.content.Intent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -14,6 +15,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.util.Log;
 import android.view.View;
 import android.content.Intent;
@@ -119,6 +122,13 @@ public class MainActivity extends AppCompatActivity{
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
+    }
+
+
+    public void viewFullPost(View v){
+        Intent intent = new Intent(this, FullPost.class);
+        intent.putExtra("test", "test");
+        startActivity(intent);
     }
 
     public void mapButton(View v){
@@ -333,6 +343,19 @@ public class MainActivity extends AppCompatActivity{
                 // error encountered
             }
         });
+    }
+
+    public void logout(View v){
+        final Firebase ref = new Firebase("https://vivid-heat-3338.firebaseio.com");
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences.Editor e = settings.edit();
+        e.putString("email",null);
+        e.putString("password",null);
+        e.putString("user_id", null);
+        e.commit();
+        ref.unauth();
+        Intent intent=new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 
 

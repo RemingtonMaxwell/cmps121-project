@@ -2,15 +2,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.brandongomez.overheards.OneFragment">
+    tools:context="com.example.brandongomez.overheards.FiveFragment">
 
-    <TextView
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/oneSpinner"
+        android:id="@+id/linearLayout"></LinearLayout>
+
+    <Spinner
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/oneSpinner"
+        android:entries="@array/categories"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        />
+
+    <ListView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/listView"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:divider="@android:color/transparent"
+    android:dividerHeight="10.0sp"
+    android:layout_above="@+id/oneSpinner" />
+
+    <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="one"
-        android:id="@+id/test"
-        android:textSize="40dp"
-        android:textStyle="bold"
-        android:layout_centerInParent="true"/>
+        android:id="@+id/spinner_display"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/oneSpinner"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:entries="@array/display"/>
+
 
 </RelativeLayout>
