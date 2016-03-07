@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <items version="2" >
-
+    
     <item
         jar="C:\Users\Jolina\Documents\gitPrograms\cmps121-project\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-base\8.4.0\jars\classes.jar"
         jumboMode="false"
@@ -85,5 +85,5 @@
         sha1="8e673cdfadd8f2d98fdb2fda2285c30f6e449782">
         <dex dex="C:\Users\Jolina\Documents\gitPrograms\cmps121-project\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-basement-8.4.0_58b02815852e73fe3b99d8bc2d75f9d1c05b1796.jar" />
     </item>
-
+    
 </items>
