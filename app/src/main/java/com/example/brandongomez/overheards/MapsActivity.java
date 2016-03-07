@@ -16,6 +16,9 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.AdapterView;
 import android.widget.TextView;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.graphics.PorterDuff;
+import android.graphics.Bitmap;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -26,6 +29,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.ui.IconGenerator;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -313,6 +320,9 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
         mMap.setOnMarkerClickListener(mClusterManager);
         mClusterManager.getMarkerCollection().setOnInfoWindowAdapter(
                 new MyCustomAdapterForItems());
+        mClusterManager.setRenderer(new MyClusterRenderer(this, mMap,
+                mClusterManager));
+
     }
 
 
@@ -339,6 +349,8 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
 
         private final View myContentsView;
 
+        private final IconGenerator mClusterIconGenerator = new IconGenerator(getApplicationContext());
+
         MyCustomAdapterForItems() {
             myContentsView = getLayoutInflater().inflate(
                     R.layout.info_window, null);
@@ -361,11 +373,58 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
         public View getInfoContents(Marker marker) {
             return null;
         }
+
+    }
+
+    public class MyClusterRenderer extends DefaultClusterRenderer<MyItem> {
+
+        private final IconGenerator mClusterIconGenerator = new IconGenerator(getApplicationContext());
+
+        public MyClusterRenderer(Context context, GoogleMap map,
+                                 ClusterManager<MyItem> clusterManager) {
+            super(context, map, clusterManager);
+        }
+
+        @Override
+        protected void onBeforeClusterItemRendered(MyItem item,
+                                                   MarkerOptions markerOptions) {
+
+            BitmapDescriptor markerDescriptor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA);
+
+            markerOptions.icon(markerDescriptor);
+        }
+
+        @Override
+        protected void onClusterItemRendered(MyItem clusterItem, Marker marker) {
+            super.onClusterItemRendered(clusterItem, marker);
+        }
+
+        @Override
+        protected void onBeforeClusterRendered(Cluster<MyItem> cluster, MarkerOptions markerOptions){
+
+            final Drawable clusterIcon = getResources().getDrawable(R.mipmap.ic_launcher);
+            //clusterIcon.setColorFilter(getResources().getColor(android.R.color.holo_orange_light), PorterDuff.Mode.SRC_ATOP);
+
+            mClusterIconGenerator.setBackground(clusterIcon);
+
+            //modify padding for one or two digit numbers
+            if (cluster.getSize() < 10) {
+                mClusterIconGenerator.setContentPadding(40, 20, 0, 0);
+            }
+            else {
+                mClusterIconGenerator.setContentPadding(30, 20, 0, 0);
+            }
+
+            Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+        }
     }
 
     private void removeMarkers() {
         mMap.clear();
         mClusterManager.clearItems();
     }
+
+
 
 }
