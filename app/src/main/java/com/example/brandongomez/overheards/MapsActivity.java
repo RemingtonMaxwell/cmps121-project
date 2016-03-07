@@ -222,9 +222,13 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
                                     updateMap.put("latitude", latLng.latitude);
                                     updateMap.put("longitude", latLng.longitude);
                                     ref.updateChildren(updateMap);
-                                    Post post = snapshot.getValue(Post.class);
-                                    marker.setTitle(post.getUser_id());
-                                    marker.setSnippet(post.getContent());
+                                    for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                                        Post post = postSnapshot.getValue(Post.class);
+                                        if(post.getPost_id().compareTo(post_id)==0){
+                                            marker.setTitle(post.getUser_id());
+                                            marker.setSnippet(post.getContent());
+                                        }
+                                    }
                                 }
                             }
 
