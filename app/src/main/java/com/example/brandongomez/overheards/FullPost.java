@@ -2,63 +2,56 @@ package com.example.brandongomez.overheards;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
-
-public class OneFragment extends Fragment implements AdapterView.OnItemSelectedListener {
-    private Spinner mspin;
-    private Spinner spinDisplay;
-    private ArrayList<PostElement> aList;
-    PostListAdapter adapter;
+/**
+ * Created by Jolina on 3/6/2016.
+ */
+public class FullPost extends AppCompatActivity{
+    private ArrayList<CommentElement> aList;
+    CommentAdapter adapter;
     ListView myListView;
-    TextView fullPost;
-    Button like;
-    Button dislike;
+    public TextView fp_username;
+    public TextView fp_timestamp;
+    public TextView fp_content;
+    public TextView fp_upvotes;
+    public Button fp_like;
+    public Button fp_dislike;
 
-
-    public OneFragment() {
-        // Required empty public constructor
-    }
+    public FullPost(){}
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        aList = new ArrayList<PostElement>();
-        adapter = new PostListAdapter(this.getContext(), R.layout.post_element, aList);
-        Log.i("First Fragment user id", "here");
+        setContentView(R.layout.full_post);
+        aList = new ArrayList<CommentElement>();
+        adapter = new CommentAdapter(this, R.layout.comment_element, aList);
 
-    }
+        Intent intent = getIntent();
+        Log.i("post", intent.getExtras().getString("test"));
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        View v = inflater.inflate(R.layout.fragment_one, container, false);
 
-        //instantiate widgets
-        myListView = (ListView) v.findViewById(R.id.listView);
-        fullPost = (TextView)v.findViewById(R.id.more);
-        mspin = (Spinner)v.findViewById(R.id.oneSpinner);
-        spinDisplay = (Spinner)v.findViewById(R.id.spinner_display);
+        myListView = (ListView)findViewById(R.id.commentList);
+        fp_username = (TextView)findViewById(R.id.username);
+        fp_timestamp = (TextView)findViewById(R.id.timestamp);
+        fp_content = (TextView)findViewById(R.id.content);
+        fp_upvotes = (TextView)findViewById(R.id.votes);
 
-        mspin.setOnItemSelectedListener(this);
-        spinDisplay.setOnItemSelectedListener(this);
-        return v;
     }
 
     @Override
@@ -66,10 +59,16 @@ public class OneFragment extends Fragment implements AdapterView.OnItemSelectedL
         super.onResume();
         myListView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-        getPosts();
+
+        //fp_username.setText(pfpElement.username);
+        //fp_timestamp.setText(pfpElement.time);
+        //fp_content.setText(pfpElement.content);
+        //fp_upvotes.setText(pfpElement.votes);
+
+        getComments();
     }
 
-    private void getPosts(){
+    private void getComments(){
         /* HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         // set your desired log level
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -103,24 +102,10 @@ public class OneFragment extends Fragment implements AdapterView.OnItemSelectedL
                     aList.add(new ListElement(results.get(i).getTimestamp(), results.get(i).getMessage(), results.get(i).getNickname(), results.get(i).getMessageId(), results.get(i).getUserId()));
                 }
                 adapter.notifyDataSetChanged();*/
-        aList.clear();
-        aList.add(new PostElement("I WANT TO BE THE VERY BEST", "pic", "Ash Ketchum","time","0"));
-        aList.add(new PostElement("THAT NO ONE EVERY WAS", "pic", "Misty", "time", "0"));
-        aList.add(new PostElement("TO CATCH THEM IS MY REAL QUEST", "pic", "null", "time", "0"));
-        aList.add(new PostElement("TO TRAIN THEM IS MY CAUSE", "pic", "String Not Found", "time", "0"));
+        aList.add(new CommentElement("SO YOU WANNA BE A MASTER OF POKEMON", "pic", "Cynthia","time"));
+        aList.add(new CommentElement("UNDERSTAND THE SECRETS AND HAVE SOME FUN", "pic", "Wallace", "time"));
+        aList.add(new CommentElement("SO YOU WANNA BE A MASTER OF POKEMON", "pic", "Juan", "time"));
+        aList.add(new CommentElement("DO YOU HAVE THE SKILLS TO BE NUMBER ONE?", "pic", "Alder", "time"));
         adapter.notifyDataSetChanged();
-    }
-
-    public void onItemSelected(AdapterView<?> parent, View view,
-                               int pos, long id) {
-        String spinnerdisplay = mspin.getSelectedItem().toString();
-        String spinnerdisplaydisplay = spinDisplay.getSelectedItem().toString();
-        Toast.makeText(this.getContext(), spinnerdisplay +" "+ spinnerdisplaydisplay, Toast.LENGTH_SHORT).show();
-        // An item was selected. You can retrieve the selected item using
-        // parent.getItemAtPosition(pos)
-    }
-
-    public void onNothingSelected(AdapterView<?> parent) {
-        // Another interface callback
     }
 }

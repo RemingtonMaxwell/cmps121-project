@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/postborder"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:adjustViewBounds="true"
+        android:maxWidth="60dp"
+        android:maxHeight="60dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/flanfox"
+        android:layout_marginLeft="17dp"
+        android:layout_marginTop="17dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:text="New Text"
+        android:id="@+id/username"
+        android:layout_toRightOf="@+id/imageView"
+        android:layout_toEndOf="@+id/imageView"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_alignTop="@+id/imageView"
+        android:layout_marginLeft="30dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:text="New Text"
+        android:id="@+id/timestamp"
+        android:layout_below="@+id/username"
+        android:layout_alignLeft="@+id/username"
+        android:layout_alignStart="@+id/username" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_below="@+id/imageView"
+        android:layout_alignLeft="@+id/imageView"
+        android:layout_alignStart="@+id/imageView"
+        android:layout_marginRight="30dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:text="More"
+        android:id="@+id/more"
+        android:textColor="#0000FF"
+        android:layout_below="@+id/content"
+        android:layout_alignLeft="@+id/content"
+        android:layout_alignStart="@+id/content"
+        android:onClick="viewFullPost"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:text="New Text"
+        android:id="@+id/votes"
+        android:layout_below="@+id/more"
+        android:layout_alignLeft="@+id/content"
+        android:layout_alignStart="@+id/content"
+        android:layout_marginRight="200dp" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:text="Like"
+        android:id="@+id/upvoteButton"
+        android:layout_alignBottom="@+id/votes"
+        android:layout_alignLeft="@+id/timestamp"
+        android:layout_alignStart="@+id/timestamp" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:text="Ew"
+        android:id="@+id/downvoteButton"
+        android:layout_alignBottom="@+id/votes"
+        android:layout_toRightOf="@+id/upvoteButton"
+        android:layout_toEndOf="@+id/upvoteButton" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/whitespace"
+        android:layout_below="@+id/votes"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+</RelativeLayout>
