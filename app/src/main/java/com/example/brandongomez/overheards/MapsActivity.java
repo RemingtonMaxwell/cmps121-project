@@ -389,7 +389,7 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
         protected void onBeforeClusterItemRendered(MyItem item,
                                                    MarkerOptions markerOptions) {
 
-            BitmapDescriptor markerDescriptor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA);
+            BitmapDescriptor markerDescriptor = BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher);
 
             markerOptions.icon(markerDescriptor);
         }
@@ -402,8 +402,8 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
         @Override
         protected void onBeforeClusterRendered(Cluster<MyItem> cluster, MarkerOptions markerOptions){
 
-            final Drawable clusterIcon = getResources().getDrawable(R.mipmap.ic_launcher);
-            //clusterIcon.setColorFilter(getResources().getColor(android.R.color.holo_orange_light), PorterDuff.Mode.SRC_ATOP);
+            final Drawable clusterIcon = getResources().getDrawable(R.drawable.bubble_mask);
+            clusterIcon.setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
 
             mClusterIconGenerator.setBackground(clusterIcon);
 
