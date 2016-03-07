@@ -30,6 +30,7 @@ public class OneFragment extends Fragment implements AdapterView.OnItemSelectedL
     Button like;
     Button dislike;
 
+
     public OneFragment() {
         // Required empty public constructor
     }
@@ -39,6 +40,8 @@ public class OneFragment extends Fragment implements AdapterView.OnItemSelectedL
         super.onCreate(savedInstanceState);
         aList = new ArrayList<PostElement>();
         adapter = new PostListAdapter(this.getContext(), R.layout.post_element, aList);
+        Log.i("First Fragment user id", "here");
+
     }
 
     @Override
@@ -64,8 +67,6 @@ public class OneFragment extends Fragment implements AdapterView.OnItemSelectedL
         myListView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         getPosts();
-
-
     }
 
     private void getPosts(){
