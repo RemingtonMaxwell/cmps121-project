@@ -22,6 +22,11 @@ public class Location{
     public double getLongitude(){
         return  longitude;
     }
-
+    public void setLatitide(double lat){
+        this.latitude = lat;
+    }
+    public void setLongitude(double lon){
+        this.longitude = lon;
+    }
 }
 
