@@ -10,11 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TextView;
 
-import com.example.brandongomez.overheards.R;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+
 
 public class OneFragment extends Fragment {
     protected View mView;
@@ -49,23 +49,6 @@ public class OneFragment extends Fragment {
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                /*
-                System.out.println("There are " + snapshot.getChildrenCount() + " users");
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
-                    User user = postSnapshot.getValue(User.class);
-                    System.out.println(user.getEmailAddress());
-                    for (int i=0;i<user.getLocations().size();i++){
-                        System.out.println(user.getLocations().get(i));
-                    }
-                    System.out.println(user.getUser_id());
-                    //use this to check user id
-                    //something happening in logactivity-not creating user in authentication
-                    //but yet user is in database
-                    if((user.getUser_id()).compareTo("5f0febec-83d3-492a-a679-c8fc26a2964b")==0) {
-                        test.setText(user.getEmailAddress());
-                    }
-                }
-                */
             }
             @Override
             public void onCancelled(FirebaseError firebaseError) {

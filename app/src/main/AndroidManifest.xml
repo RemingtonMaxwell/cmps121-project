@@ -49,7 +49,11 @@
             android:label="@string/title_activity_maps" />
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_login"></activity>
+            android:label="@string/title_activity_login" />
+        <activity
+            android:name=".RegisterUser"
+            android:label="@string/title_activity_register_user"
+            android:theme="@style/MyMaterialTheme"></activity>
     </application>
 
 </manifest>

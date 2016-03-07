@@ -72,6 +72,16 @@
                 android:text="@string/action_sign_in"
                 android:textStyle="bold" />
 
+            <Button
+                style="?android:textAppearanceSmall"
+                android:id="@+id/btn_forgot_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Forgot Password?"
+                android:textStyle="bold"
+                android:onClick="forgotPassword"/>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

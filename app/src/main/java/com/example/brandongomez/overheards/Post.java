@@ -2,7 +2,9 @@ package com.example.brandongomez.overheards;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by remin on 3/3/2016.
@@ -16,6 +18,8 @@ public class Post {
     private String type;
     private int votes;
     private String date_heard;
+    private List<Comment> comments = new ArrayList<Comment>();
+
 
     public Post() {
         // empty default constructor, necessary for Firebase to be able to deserialize blog posts
@@ -68,5 +72,21 @@ public class Post {
 
     public String getDate_heard(){
         return date_heard;
+    }
+
+    public List<Comment> getComments(){
+        return comments;
+    }
+
+    public void addComment(Comment newComment){
+        comments.add(newComment);
+    }
+
+    public void removeComment(Comment comment){
+        for (int i=0; i<comments.size();i++){
+            if(comments.get(i).equals(comment)){
+                comments.remove(comment);
+            }
+        }
     }
 }

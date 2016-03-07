@@ -17,6 +17,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.content.Intent;
+
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -28,6 +38,7 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+
 import com.example.brandongomez.overheards.Post;
 import com.example.brandongomez.overheards.Location;
 import com.example.brandongomez.overheards.R;
@@ -36,6 +47,12 @@ import com.example.brandongomez.overheards.TwoFragment;
 import com.example.brandongomez.overheards.ThreeFragment;
 import com.example.brandongomez.overheards.FourFragment;
 import com.example.brandongomez.overheards.FiveFragment;
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+
 
 /*
     Tab design from:
@@ -54,6 +71,7 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Intent intent=getIntent();
+        Firebase.setAndroidContext(this);
         Log.i("Main Activity user id", intent.getStringExtra(LoginActivity.USER_ID));
         //checking user preferences
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
@@ -108,11 +126,32 @@ public class MainActivity extends AppCompatActivity{
         startActivity(intent);
     }
 
+
+    public void updateFirstName(View v) {
+        final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/users");
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Firebase ref = database.child(getIntent().getExtras().getString("user_id"));
+                Map<String, Object> updateSettings = new HashMap<String, Object>();
+                EditText firstName = (EditText) findViewById(R.id.settings_first_name);
+                updateSettings.put("firstName", firstName.getText().toString());
+                ref.updateChildren(updateSettings);
+                Toast.makeText(getApplicationContext(), "Updated!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
     public void submitWithCurr(View v){
-        EditText txtDescription = (EditText)findViewById(R.id.overheard);
-        DatePicker dateDescription = (DatePicker)findViewById(R.id.datePicker);
-        TimePicker timeDescription = (TimePicker)findViewById(R.id.timePicker);
-        String overheard = txtDescription.getText().toString();
+        final EditText txtDescription = (EditText)findViewById(R.id.overheard);
+        final DatePicker dateDescription = (DatePicker)findViewById(R.id.datePicker);
+        final TimePicker timeDescription = (TimePicker)findViewById(R.id.timePicker);
+        final String overheard = txtDescription.getText().toString();
         int year = dateDescription.getYear();
         int month = dateDescription.getMonth();
         int dayOfMonth = dateDescription.getDayOfMonth();
@@ -121,30 +160,69 @@ public class MainActivity extends AppCompatActivity{
         GregorianCalendar date = new GregorianCalendar(year, month, dayOfMonth, hour, min, 0);
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
         fmt.setCalendar(date);
-        String dateStr = fmt.format(date.getTime());
+        final String dateStr = fmt.format(date.getTime());
         Spinner spinner = (Spinner)findViewById(R.id.spinner);
-        String spinnerText = spinner.getSelectedItem().toString();
+        final String spinnerText = spinner.getSelectedItem().toString();
         final Location loc = new Location(36, -121);
-        Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
+        final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
         System.out.println(getIntent().getExtras().getString("user_id"));
-        Firebase ref = database.child("users").child(getIntent().getExtras().getString("user_id")).child("currentLocation");
+        final Firebase ref = database.child("users").child(getIntent().getExtras().getString("user_id")).child("currentLocation");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                latitude = (double)snapshot.child("latitude").getValue();
-                longitude = (double)snapshot.child("longitude").getValue();
-                loc.setLatitide(latitude);
-                loc.setLongitude(longitude);
+                latitude = (double) snapshot.child("latitude").getValue();
+                longitude = (double) snapshot.child("longitude").getValue();
+                Post p = new Post(overheard, user_id, new Location(latitude,longitude), spinnerText, dateStr);
+                Firebase ref1 = database.child("posts").child(p.getPost_id());
+                ref1.setValue(p);
             }
+
             @Override
             public void onCancelled(FirebaseError firebaseError) {
 
             }
         });
-        Post p = new Post(overheard, user_id, loc, spinnerText, dateStr);
-        ref = database.child("posts").child(p.getPost_id());
-        ref.setValue(p);
+
         Toast.makeText(this, "Overheard posted", Toast.LENGTH_SHORT).show();
+    }
+
+    public void updateLastName(View v){
+        final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/users");
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Firebase ref = database.child(getIntent().getExtras().getString("user_id"));
+                Map<String, Object> updateSettings = new HashMap<String, Object>();
+                EditText lastName=(EditText)findViewById(R.id.settings_last_name);
+                updateSettings.put("lastName", lastName.getText().toString());
+                ref.updateChildren(updateSettings);
+                Toast.makeText(getApplicationContext(), "Updated!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+    public void updateUserName(View v){
+        final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/users");
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Firebase ref = database.child(getIntent().getExtras().getString("user_id"));
+                Map<String, Object> updateSettings = new HashMap<String, Object>();
+                EditText userName=(EditText)findViewById(R.id.settings_user_name);
+                updateSettings.put("userName", userName.getText().toString());
+                ref.updateChildren(updateSettings);
+                Toast.makeText(getApplicationContext(), "Updated!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
     }
 
     public void submitOverheard(View v){
@@ -168,11 +246,11 @@ public class MainActivity extends AppCompatActivity{
                 loc.setLatitide(latitude);
                 loc.setLongitude(longitude);
             }
-
             @Override
             public void onCancelled(FirebaseError firebaseError) {
 
             }
+
         });
         GregorianCalendar date = new GregorianCalendar(year, month, dayOfMonth, hour, min, 0);
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
@@ -187,6 +265,64 @@ public class MainActivity extends AppCompatActivity{
         Intent intent = new Intent(this, MapsActivity.class);
         intent.putExtra("message_id", p.getPost_id());
         startActivity(intent);
+
     }
+    public void updateEmailAddress(View v){
+        final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/users");
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                final Firebase ref = database.child(getIntent().getExtras().getString("user_id"));
+                Map<String, Object> updateSettings = new HashMap<String, Object>();
+                final EditText emailAddress = (EditText) findViewById(R.id.settings_email_address);
+                updateSettings.put("emailAddress", emailAddress.getText().toString());
+                Firebase refUser = new Firebase("https://vivid-heat-3338.firebaseio.com/users/" + getIntent().getStringExtra(LoginActivity.USER_ID));
+                updateUserEmailAddress();
+                //send updates to server
+                ref.updateChildren(updateSettings);
+                Toast.makeText(getApplicationContext(), "Updated!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
+    public void updateUserEmailAddress(){
+        //get the old email and password
+        final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/users");
+        final Firebase ref = database.child(getIntent().getExtras().getString("user_id"));
+                final EditText emailAddress=(EditText)findViewById(R.id.settings_email_address);
+                ref.changeEmail(getIntent().getStringExtra(LoginActivity.EMAIL), getIntent().getStringExtra(LoginActivity.PASSWORD), emailAddress.getText().toString(), new Firebase.ResultHandler() {
+                    @Override
+                    public void onSuccess() {
+                        // email changed
+                        System.out.println("email changed");
+                    }
+
+                    @Override
+                    public void onError(FirebaseError firebaseError) {
+                        // error encountered
+                    }
+                });
+    }
+    public void updatePassword(View v){
+        final Firebase ref = new Firebase("https://vivid-heat-3338.firebaseio.com");
+        final EditText password = (EditText) findViewById(R.id.settings_password);
+        ref.changePassword(getIntent().getExtras().getString("email"), getIntent().getExtras().getString("password"), password.getText().toString(), new Firebase.ResultHandler() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(getApplicationContext(), "Updated!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(FirebaseError firebaseError) {
+                // error encountered
+            }
+        });
+    }
+
 
 }

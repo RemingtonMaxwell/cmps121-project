@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.*;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -22,6 +23,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,12 +33,22 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.ValueEventListener;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationServices;
+
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,9 +57,13 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, ConnectionCallbacks, OnConnectionFailedListener {
     public static final String EMAIL="email";
     public static final String USER_ID="user_id";
+    public static final String PASSWORD="password";
+    private GoogleApiClient mGoogleApiClient;
+
+
     /**
      * Id to identity READ_CONTACTS permission request.
      */
@@ -70,14 +86,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-
+    private String LOG_TAG="overheards";
+    private Location currentLoc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         //set up database
         Firebase.setAndroidContext(this);
-        Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
+        final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -104,8 +121,58 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        //Get location
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+    }
+    @Override
+    protected void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+    @Override
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        android.location.Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (mLastLocation != null) {
+            currentLoc=new Location(mLastLocation.getLatitude(),mLastLocation.getLongitude());
+        }else{
+            Log.i(LOG_TAG, "Location is null.");
+        }
+        Log.i(LOG_TAG, "Location services connected.");
     }
 
+    @Override
+    public void onConnectionSuspended(int cause) {
+        Log.i(LOG_TAG, "Location services suspended. Please reconnect.");
+        // The connection has been interrupted.
+        // Disable any UI components that depend on Google APIs
+        // until onConnected() is called.
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        Log.i("", "Location services failed.");
+        // This callback is important for handling errors that
+        // may occur while attempting to connect with Google.
+        //
+        // More about this in the 'Handle Connection Failures' section.
+        //...
+    }
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;
@@ -319,25 +386,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-            final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
             boolean createAccount=true;
             try {
                 // Simulate network access.
+                final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
                 database.authWithPassword(mEmail, mPassword, new Firebase.AuthResultHandler() {
                     @Override
                     public void onAuthenticated(AuthData authData) {
-                        System.out.println("User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
-                        callMainActivity(mEmail,authData.getUid());
+                        callMainActivity(mEmail,authData.getUid(),mPassword);
                     }
                     @Override
                     public void onAuthenticationError(FirebaseError firebaseError) {
-
                         if (firebaseError.getCode()==FirebaseError.INVALID_PASSWORD){
-                            mEmailView.setError("Invalid Password");
-                            callLoginActivity();
-                        }else if (firebaseError.getCode()==FirebaseError.INVALID_EMAIL){
-                            mEmailView.setError("Invalid Email");
-                            callLoginActivity();
+                            callLoginActivity(0);
+                        }else{
+                            callLoginActivity(1);
                         }
 
                     }
@@ -347,18 +410,36 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 System.out.println("Error Connecting");
                 return false;
             }
-                database.createUser(mEmail, mPassword, new Firebase.ValueResultHandler<Map<String, Object>>() {
+            final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
+                /*database.createUser(mEmail, mPassword, new Firebase.ValueResultHandler<Map<String, Object>>() {
                     @Override
                     public void onSuccess(Map<String, Object> result) {
-                        System.out.println("Successfully created user account with uid: " + result.get("uid"));
-                        callMainActivity(mEmail, result.get("uid").toString());
+                        // Simulate network access.
+                        database.authWithPassword(mEmail, mPassword, new Firebase.AuthResultHandler() {
+                            @Override
+                            public void onAuthenticated(AuthData authData) {
+                                callMainActivity(mEmail, authData.getUid(), mPassword);
+                            }
+
+                            @Override
+                            public void onAuthenticationError(FirebaseError firebaseError) {
+
+                                if (firebaseError.getCode() == FirebaseError.INVALID_PASSWORD) {
+                                    callLoginActivity(0);
+                                } else if (firebaseError.getCode() == FirebaseError.INVALID_EMAIL) {
+                                    callLoginActivity(1);
+                                }
+
+                            }
+                        });
+                        //callMainActivity(mEmail, result.get("uid").toString(),result.g);
                     }
 
                     @Override
                     public void onError(FirebaseError firebaseError) {
                         // there was an error
                     }
-                });
+                });*/
 
 
             // TODO: register the new account here.
@@ -384,10 +465,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
         }
     }
-    public void callMainActivity(String email, String user_id){
-        Intent intent = new Intent(this,MainActivity.class);
+    public void callMainActivity(String email, final String user_id, String password){
+        final Intent intent = new Intent(this,MainActivity.class);
         intent.putExtra(EMAIL,email);
         intent.putExtra(USER_ID,user_id);
+        intent.putExtra(PASSWORD,password);
+        final String emailAddress=email;
         //save user id in preferences
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         final SharedPreferences.Editor e = settings.edit();
@@ -397,15 +480,91 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             e.commit();
         }
         //fill in user information
-        Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
-        Firebase ref=database.child("users").child(user_id);
-        User user= new User(email,user_id);
-        ref.setValue(user);
-        startActivity(intent);
+        final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/users");
+        //first see if user already exists in database
+
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                //if (snapshot.hasChild(user_id)) {
+                    Firebase ref = database.child(user_id).child("currentLocation");
+                    Map<String, Object> updateUser = new HashMap<String, Object>();
+                    updateUser.put("latitude", currentLoc.getLatitude());
+                    updateUser.put("longitude", currentLoc.getLongitude());
+                    ref.updateChildren(updateUser);
+                    Log.i(LOG_TAG, "user already exists");
+               /* } else {
+                    Log.i(LOG_TAG, "new user");
+                    User user = new User(emailAddress, user_id, currentLoc,);
+                    Firebase ref = database.child(user_id);
+                    ref.setValue(user);
+                }*/
+                startActivity(intent);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
     }
-    public void callLoginActivity(){
+    public void callLoginActivity(int val){
         Intent intent = new Intent(this,LoginActivity.class);
-        startActivity(intent);
+        if(val==0) {
+            Toast.makeText(getApplicationContext(), "Email and password do not match.", Toast.LENGTH_SHORT).show();
+            startActivity(intent);
+        }else{
+            Intent intentReg = new Intent(this,RegisterUser.class);
+            intentReg.putExtra(EMAIL,mEmailView.getText().toString());
+            intentReg.putExtra(PASSWORD,mPasswordView.getText().toString());
+            intentReg.putExtra("latitude",currentLoc.getLatitude());
+            intentReg.putExtra("longitude",currentLoc.getLongitude());
+            Log.i(LOG_TAG, "here"+EMAIL+" "+PASSWORD);
+            startActivity(intentReg);
+
+        }
+    }
+
+    public void forgotPassword(View v){
+        final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/users");
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                System.out.println("There are " + snapshot.getChildrenCount() + " users");
+                boolean emailExists=false;
+                for (DataSnapshot users: snapshot.getChildren()) {
+                    User user = users.getValue(User.class);
+                    if((user.getEmailAddress()).compareTo(mEmailView.getText().toString())==0){
+                        emailExists=true;
+                        database.resetPassword(mEmailView.getText().toString(), new Firebase.ResultHandler() {
+                            @Override
+                            public void onSuccess() {
+                                Log.i(LOG_TAG, "success");
+                                Toast.makeText(getApplicationContext(), "Please Check Your Email.", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            @Override
+                            public void onError(FirebaseError firebaseError) {
+                                Toast.makeText(getApplicationContext(), "Error sending email.", Toast.LENGTH_SHORT).show();
+                                Log.i(LOG_TAG, "failure");
+                            }
+                        });
+                     }
+                }
+                if(!emailExists){
+                    Toast.makeText(getApplicationContext(), "Email not found.", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+            }
+        });
+
+
     }
 }
 
