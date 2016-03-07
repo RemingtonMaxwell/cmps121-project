@@ -14,6 +14,8 @@ import android.location.Geocoder;
 import android.location.Address;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.AdapterView;
+import android.widget.TextView;
+import android.content.Intent;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -23,6 +25,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -40,7 +43,7 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-public class MapsActivity extends FragmentActivity implements OnInfoWindowClickListener, OnMapReadyCallback, OnItemSelectedListener{
+public class MapsActivity extends FragmentActivity implements OnInfoWindowClickListener, OnMapReadyCallback, OnItemSelectedListener, ClusterManager.OnClusterItemInfoWindowClickListener<MyItem>{
 
     private GoogleMap mMap;
     final Context context = this;
@@ -49,6 +52,9 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
     Geocoder geocoder;
     String post_id;
     boolean posted = false;
+    // Declare a variable for the cluster manager.
+    ClusterManager<MyItem> mClusterManager;
+    private MyItem clickedClusterItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,70 +72,6 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         geocoder = new Geocoder(this, Locale.getDefault());
-        Firebase.setAndroidContext(this);
-        Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/posts");
-        // Attach an listener to read the data at our posts reference
-        database.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    Post post = postSnapshot.getValue(Post.class);
-                    String[] ids = TimeZone.getAvailableIDs(-8 * 60 * 60 * 1000);
-                    SimpleTimeZone pdt = new SimpleTimeZone(-8 * 60 * 60 * 1000, ids[0]);
-                    GregorianCalendar date = new GregorianCalendar(pdt);
-                    Spinner spinner = (Spinner)findViewById(R.id.timeSpinner);
-                    String spinnerText = spinner.getSelectedItem().toString();
-                    String dateHeard = post.getDate_heard();
-                    String[] parsedDateHeard = dateHeard.split("/");
-                    String[] parsedTimeHeard = parsedDateHeard[2].split(" ");
-                    Spinner typeSpinner = (Spinner)findViewById(R.id.categorySpinner);
-                    String typeSpinnerText = typeSpinner.getSelectedItem().toString();
-                    String typePosted = post.getType();
-                    if(spinnerText.equals("this year")){
-                        if(Integer.valueOf(parsedDateHeard[0]) == date.get(Calendar.YEAR)){
-                            if(typeSpinnerText.equals(typePosted) || typeSpinnerText.equals("all")) {
-                                addMarker(post.getLocation().getLatitude(),
-                                        post.getLocation().getLongitude(),
-                                        post.getUser_id(),
-                                        post.getContent());
-                            }
-                        }
-                    }
-                    if (spinnerText.equals("this month")){
-                        if(Integer.valueOf(parsedDateHeard[0]) == date.get(Calendar.YEAR)){
-                            if(Integer.valueOf(parsedDateHeard[1]) == (date.get(Calendar.MONTH) + 1)) {
-                                if(typeSpinnerText.equals(typePosted) || typeSpinnerText.equals("all")) {
-                                    addMarker(post.getLocation().getLatitude(),
-                                            post.getLocation().getLongitude(),
-                                            post.getUser_id(),
-                                            post.getContent());
-                                }
-                            }
-                        }
-                    }
-                    if (spinnerText.equals("today")){
-                        if(Integer.valueOf(parsedDateHeard[0]) == date.get(Calendar.YEAR)) {
-                            if(Integer.valueOf(parsedDateHeard[1]) == (date.get(Calendar.MONTH) + 1)) {
-                                if(Integer.valueOf(parsedTimeHeard[0]) == date.get(Calendar.DAY_OF_MONTH)) {
-                                    if(typeSpinnerText.equals(typePosted) || typeSpinnerText.equals("all")) {
-                                        addMarker(post.getLocation().getLatitude(),
-                                                post.getLocation().getLongitude(),
-                                                post.getUser_id(),
-                                                post.getContent());
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                System.out.println("The read failed: " + firebaseError.getMessage());
-            }
-        });
-
     }
 
     /**
@@ -244,6 +186,8 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
                 }
             });
         }
+        setUpClusterer();
+
     }
 
     @Override
@@ -271,10 +215,10 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
     }
 
-    public void onItemSelected (AdapterView < ? > parent, View view,int pos, long id){
+    public void onItemSelected (AdapterView < ? > parent, View view, final int pos, long id){
+        removeMarkers();
         Firebase.setAndroidContext(this);
         Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/posts");
-        mMap.clear();
         // Attach an listener to read the data at our posts reference
         database.addValueEventListener(new ValueEventListener() {
             @Override
@@ -295,10 +239,11 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
                     if (spinnerText.equals("this year")) {
                         if (Integer.valueOf(parsedDateHeard[0]) == date.get(Calendar.YEAR)) {
                             if(typeSpinnerText.equals(typePosted) || typeSpinnerText.equals("all")) {
-                                addMarker(post.getLocation().getLatitude(),
+                                MyItem offsetItem = new MyItem(post.getLocation().getLatitude(),
                                         post.getLocation().getLongitude(),
                                         post.getUser_id(),
                                         post.getContent());
+                                mClusterManager.addItem(offsetItem);
                             }
                         }
                     }
@@ -306,10 +251,11 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
                         if (Integer.valueOf(parsedDateHeard[0]) == date.get(Calendar.YEAR)) {
                             if (Integer.valueOf(parsedDateHeard[1]) == (date.get(Calendar.MONTH) + 1)) {
                                 if(typeSpinnerText.equals(typePosted) || typeSpinnerText.equals("all")) {
-                                    addMarker(post.getLocation().getLatitude(),
+                                    MyItem offsetItem = new MyItem(post.getLocation().getLatitude(),
                                             post.getLocation().getLongitude(),
                                             post.getUser_id(),
                                             post.getContent());
+                                    mClusterManager.addItem(offsetItem);
                                 }
                             }
                         }
@@ -319,10 +265,11 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
                             if (Integer.valueOf(parsedDateHeard[1]) == (date.get(Calendar.MONTH) + 1)) {
                                 if (Integer.valueOf(parsedTimeHeard[0]) == date.get(Calendar.DAY_OF_MONTH)) {
                                     if(typeSpinnerText.equals(typePosted) || typeSpinnerText.equals("all")) {
-                                        addMarker(post.getLocation().getLatitude(),
+                                        MyItem offsetItem = new MyItem(post.getLocation().getLatitude(),
                                                 post.getLocation().getLongitude(),
                                                 post.getUser_id(),
                                                 post.getContent());
+                                        mClusterManager.addItem(offsetItem);
                                     }
                                 }
                             }
@@ -339,7 +286,86 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
     }
 
     public void onNothingSelected(AdapterView parent) {
-        System.out.println("LISTENER WORKED");
+
+    }
+
+
+    private void setUpClusterer() {
+
+        // Initialize the manager with the context and the map.
+        // (Activity extends context, so we can pass 'this' in the constructor.)
+        mClusterManager = new ClusterManager<MyItem>(this, mMap);
+        mMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
+        mMap.setOnInfoWindowClickListener(mClusterManager);
+        mClusterManager.setOnClusterItemInfoWindowClickListener(this);
+        mClusterManager
+                .setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MyItem>() {
+                    @Override
+                    public boolean onClusterItemClick(MyItem item) {
+                        clickedClusterItem = item;
+                        return false;
+                    }
+                });
+
+        // Point the map's listeners at the listeners implemented by the cluster
+        // manager.
+        mMap.setOnCameraChangeListener(mClusterManager);
+        mMap.setOnMarkerClickListener(mClusterManager);
+        mClusterManager.getMarkerCollection().setOnInfoWindowAdapter(
+                new MyCustomAdapterForItems());
+    }
+
+
+    //added with edit
+    @Override
+    public void onClusterItemInfoWindowClick(MyItem myItem) {
+        /*
+        //Cluster item InfoWindow clicked, set title as action
+        //Intent i = new Intent(this, OtherActivity.class);
+        //i.setAction(myItem.getTitle());
+        //startActivity(i);
+
+        //You may want to do different things for each InfoWindow:
+        if (myItem.getTitle().equals("some title")){
+
+            //do something specific to this InfoWindow....
+
+        }
+        */
+
+    }
+
+    public class MyCustomAdapterForItems implements GoogleMap.InfoWindowAdapter {
+
+        private final View myContentsView;
+
+        MyCustomAdapterForItems() {
+            myContentsView = getLayoutInflater().inflate(
+                    R.layout.info_window, null);
+        }
+        @Override
+        public View getInfoWindow(Marker marker) {
+
+            TextView tvTitle = ((TextView) myContentsView
+                    .findViewById(R.id.txtTitle));
+            TextView tvSnippet = ((TextView) myContentsView
+                    .findViewById(R.id.txtSnippet));
+
+            tvTitle.setText(clickedClusterItem.getTitle());
+            tvSnippet.setText(clickedClusterItem.getSnippet());
+
+            return myContentsView;
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            return null;
+        }
+    }
+
+    private void removeMarkers() {
+        mMap.clear();
+        mClusterManager.clearItems();
     }
 
 }
