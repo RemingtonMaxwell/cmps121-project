@@ -324,5 +324,18 @@ public class MainActivity extends AppCompatActivity{
         });
     }
 
+    public void logout(View v){
+        final Firebase ref = new Firebase("https://vivid-heat-3338.firebaseio.com");
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences.Editor e = settings.edit();
+        e.putString("email",null);
+        e.putString("password",null);
+        e.putString("user_id", null);
+        e.commit();
+        ref.unauth();
+        Intent intent=new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
 
 }
