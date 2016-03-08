@@ -1,3 +1,16 @@
+
+
+    <!--ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/postButton"
+        android:layout_toRightOf="@+id/postQuestion"
+        android:layout_toEndOf="@+id/postQuestion" /-->
+
+
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ScrollView01"
     android:layout_width="fill_parent"
@@ -18,9 +31,14 @@
 
             <EditText
                 android:layout_width="match_parent"
+                android:hint="Type post here"
                 android:layout_height="wrap_content"
                 android:id="@+id/overheard"
-                android:layout_alignParentTop="true" />
+                android:layout_alignParentTop="true"
+                android:layout_alignLeft="@+id/datePicker"
+                android:layout_alignStart="@+id/datePicker"
+                android:layout_alignRight="@+id/submit"
+                android:layout_alignEnd="@+id/submit" />
 
             <DatePicker
                 android:layout_width="wrap_content"
@@ -45,28 +63,42 @@
                 android:entries="@array/categories"/>
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="go to map"
                 android:id="@+id/submit"
+                android:text="PIN"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:background="@drawable/buttonshapepost"
+                android:shadowColor="#DDFFE0"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"
                 android:onClick="submitOverheard"
-                android:layout_below="@+id/spinner"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                android:layout_alignTop="@+id/button"
+                android:layout_alignRight="@+id/datePicker"
+                android:layout_alignEnd="@+id/datePicker" />
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Post using current location"
                 android:id="@+id/button"
-                android:layout_alignBottom="@+id/submit"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:onClick="submitWithCurr"/>
-
-
+                android:text="POST"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:background="@drawable/buttonshapepost"
+                android:shadowColor="#DDFFE0"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"
+                android:onClick="submitWithCurr"
+                android:layout_below="@+id/spinner"
+                android:layout_alignLeft="@+id/datePicker"
+                android:layout_alignStart="@+id/datePicker" />
+            
         </RelativeLayout>
 
     </LinearLayout>
 
 </ScrollView>
+
