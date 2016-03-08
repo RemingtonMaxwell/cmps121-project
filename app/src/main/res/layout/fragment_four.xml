@@ -1,15 +1,110 @@
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    >
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.brandongomez.overheards.FourFragment">
+    android:layout_height="wrap_content"
+    tools:context="com.example.brandongomez.overheards.FourFragment"
+    android:visibility="visible">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:inputType="textMultiLine"
+        android:background="@drawable/textinputborder"
+        android:ems="10"
+        android:id="@+id/editText"
+        android:hint="Enter location"
+        android:gravity="top|left"
+        android:layout_alignBottom="@+id/view"
+        android:layout_alignLeft="@+id/postBox"
+        android:layout_alignStart="@+id/postBox" />
+
+    <EditText
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
+        android:inputType="textMultiLine"
+        android:background="@drawable/textinputborder"
+        android:ems="10"
+        android:id="@+id/postBox"
+        android:hint="Enter post"
+        android:gravity="top|left"
+        android:lines="14"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="135dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="post"
+        android:id="@+id/postButton"
+        android:onClick="postInfo"
+        android:layout_marginTop="42dp"
+        android:layout_below="@+id/view"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="four"
-        android:textSize="40dp"
+        android:text="What did ya hear!?"
         android:textStyle="bold"
-        android:layout_centerInParent="true"/>
+        android:id="@+id/postQuestion"
+        android:textSize="22sp"
+        android:visibility="visible"
+        android:layout_marginTop="59dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:minHeight="1dp"
+        android:background="@android:color/darker_gray"
+        android:id="@+id/view"
+        android:layout_marginTop="50dp"
+        android:layout_below="@+id/postBox"
+        android:layout_centerHorizontal="true" />
+
+    <View
+        android:layout_width="1dip"
+        android:layout_height="fill_parent"
+        android:background="#FF000000"
+        android:layout_below="@+id/view"
+        android:layout_toLeftOf="@+id/postButton"
+        android:layout_toStartOf="@+id/postButton" />
+
+    <View
+        android:layout_width="1dip"
+        android:layout_height="fill_parent"
+        android:background="#FF000000"
+        android:layout_below="@+id/view"
+        android:layout_toLeftOf="@+id/postButton"
+        android:layout_toStartOf="@+id/postButton" />
+
+    <View
+        android:layout_width="1dip"
+        android:layout_height="fill_parent"
+        android:background="#FF000000"
+        android:layout_alignTop="@+id/view"
+        android:layout_toRightOf="@+id/postButton"
+        android:layout_toEndOf="@+id/postButton"
+        android:id="@+id/view5" />
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/postButton"
+        android:layout_toRightOf="@+id/postQuestion"
+        android:layout_toEndOf="@+id/postQuestion" />
+
 
 </RelativeLayout>
+</ScrollView>
