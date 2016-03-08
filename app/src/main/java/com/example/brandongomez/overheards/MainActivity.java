@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity{
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new OneFragment(), "Top");
-        adapter.addFragment(new TwoFragment(), "Recent");
+        //adapter.addFragment(new TwoFragment(), "Recent");
         adapter.addFragment(new ThreeFragment(), "Map");
         adapter.addFragment(new FourFragment(), "Post");
         adapter.addFragment(new FiveFragment(), "You");
