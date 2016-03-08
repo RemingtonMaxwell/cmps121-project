@@ -1,1 +1,12 @@
+
+accepted
+Update: Since Android Studio 1.0, new projects are created with this gitignore file:
+
+
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
 /build
+

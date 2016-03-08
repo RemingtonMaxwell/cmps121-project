@@ -1,110 +1,104 @@
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
-    >
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context="com.example.brandongomez.overheards.FourFragment"
-    android:visibility="visible">
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:inputType="textMultiLine"
-        android:background="@drawable/textinputborder"
-        android:ems="10"
-        android:id="@+id/editText"
-        android:hint="Enter location"
-        android:gravity="top|left"
-        android:layout_alignBottom="@+id/view"
-        android:layout_alignLeft="@+id/postBox"
-        android:layout_alignStart="@+id/postBox" />
-
-    <EditText
-        android:layout_weight="1"
-        android:layout_width="wrap_content"
-        android:layout_height="250dp"
-        android:inputType="textMultiLine"
-        android:background="@drawable/textinputborder"
-        android:ems="10"
-        android:id="@+id/postBox"
-        android:hint="Enter post"
-        android:gravity="top|left"
-        android:lines="14"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="135dp" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="post"
-        android:id="@+id/postButton"
-        android:onClick="postInfo"
-        android:layout_marginTop="42dp"
-        android:layout_below="@+id/view"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="What did ya hear!?"
-        android:textStyle="bold"
-        android:id="@+id/postQuestion"
-        android:textSize="22sp"
-        android:visibility="visible"
-        android:layout_marginTop="59dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:minHeight="1dp"
-        android:background="@android:color/darker_gray"
-        android:id="@+id/view"
-        android:layout_marginTop="50dp"
-        android:layout_below="@+id/postBox"
-        android:layout_centerHorizontal="true" />
-
-    <View
-        android:layout_width="1dip"
-        android:layout_height="fill_parent"
-        android:background="#FF000000"
-        android:layout_below="@+id/view"
-        android:layout_toLeftOf="@+id/postButton"
-        android:layout_toStartOf="@+id/postButton" />
-
-    <View
-        android:layout_width="1dip"
-        android:layout_height="fill_parent"
-        android:background="#FF000000"
-        android:layout_below="@+id/view"
-        android:layout_toLeftOf="@+id/postButton"
-        android:layout_toStartOf="@+id/postButton" />
-
-    <View
-        android:layout_width="1dip"
-        android:layout_height="fill_parent"
-        android:background="#FF000000"
-        android:layout_alignTop="@+id/view"
-        android:layout_toRightOf="@+id/postButton"
-        android:layout_toEndOf="@+id/postButton"
-        android:id="@+id/view5" />
-
-    <ProgressBar
+    <!--ProgressBar
         android:id="@+id/progressBar1"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/postButton"
         android:layout_toRightOf="@+id/postQuestion"
-        android:layout_toEndOf="@+id/postQuestion" />
+        android:layout_toEndOf="@+id/postQuestion" /-->
 
 
-</RelativeLayout>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ScrollView01"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/LinearLayout01"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="com.example.brandongomez.overheards.FourFragment">
+
+
+            <EditText
+                android:layout_width="match_parent"
+                android:hint="Type post here"
+                android:layout_height="wrap_content"
+                android:id="@+id/overheard"
+                android:layout_alignParentTop="true"
+                android:layout_alignLeft="@+id/datePicker"
+                android:layout_alignStart="@+id/datePicker"
+                android:layout_alignRight="@+id/submit"
+                android:layout_alignEnd="@+id/submit" />
+
+            <DatePicker
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/datePicker"
+                android:layout_below="@+id/overheard"
+                android:layout_centerHorizontal="true"/>
+
+            <TimePicker
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/timePicker"
+                android:layout_below="@+id/datePicker"
+                android:layout_centerHorizontal="true"/>
+
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner"
+                android:layout_below="@+id/timePicker"
+                android:layout_centerHorizontal="true"
+                android:entries="@array/categories"/>
+
+            <Button
+                android:id="@+id/submit"
+                android:text="PIN"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:background="@drawable/buttonshapepost"
+                android:shadowColor="#DDFFE0"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"
+                android:onClick="submitOverheard"
+                android:layout_alignTop="@+id/button"
+                android:layout_alignRight="@+id/datePicker"
+                android:layout_alignEnd="@+id/datePicker" />
+
+            <Button
+                android:id="@+id/button"
+                android:text="POST"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:background="@drawable/buttonshapepost"
+                android:shadowColor="#DDFFE0"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"
+                android:onClick="submitWithCurr"
+                android:layout_below="@+id/spinner"
+                android:layout_alignLeft="@+id/datePicker"
+                android:layout_alignStart="@+id/datePicker" />
+            
+        </RelativeLayout>
+
+    </LinearLayout>
+
 </ScrollView>
+
