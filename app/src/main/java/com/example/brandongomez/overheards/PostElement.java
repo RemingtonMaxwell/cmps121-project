@@ -11,13 +11,15 @@ public class PostElement {
     public String username;
     public String time;
     public String votes;
+    public String post_id;
     private int count = 0;
-    public PostElement(String c, String pic, String name, String timestamp, String vote){
+    public PostElement(String c, String pic, String name, String timestamp, String vote, String post){
         content = c;
         profile_pic = pic;
         username = name;
         time = timestamp;
         votes = vote;
+        post_id = post;
     }
 
     public String voteup(){

@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity{
     String user_id;
     double latitude, longitude;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -12,6 +12,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.firebase.client.Firebase;
+import com.firebase.client.Transaction;
+import com.firebase.client.MutableData;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.DataSnapshot;
 
 import java.util.List;
 
@@ -63,8 +68,28 @@ public class PostListAdapter extends ArrayAdapter<PostElement>{
                 upvotes.setText(element.voteup());
                 int counter = element.clickCountUp();
 
-                if(counter == 1) upvote.setClickable(false);
+                if(counter == 1) {
+                    upvote.setClickable(false);
+                }
                 downvote.setClickable(true);
+                Firebase upvotesRef = new Firebase("https://vivid-heat-3338.firebaseio.com/posts/"+element.post_id+"/votes");
+                upvotesRef.runTransaction(new Transaction.Handler() {
+                    @Override
+                    public Transaction.Result doTransaction(MutableData currentData) {
+                        if (currentData.getValue() == null) {
+                            currentData.setValue(1);
+                        } else {
+                            currentData.setValue((Long) currentData.getValue() + 1);
+                        }
+                        return Transaction.success(currentData); //we can also abort by calling Transaction.abort()
+                    }
+
+                    @Override
+                    public void onComplete(FirebaseError firebaseError, boolean committed, DataSnapshot currentData) {
+                        //This method will be called once with the results of the transaction.
+                    }
+                });
+                upvote.setClickable(false);
             }
         });
 
@@ -74,8 +99,28 @@ public class PostListAdapter extends ArrayAdapter<PostElement>{
                 upvotes.setText(element.votedown());
                 int counter = element.clickCountDown();
 
-                if(counter == -1) downvote.setClickable(false);
+                if(counter == -1) {
+                    downvote.setClickable(false);
+                }
                 upvote.setClickable(true);
+                Firebase upvotesRef = new Firebase("https://vivid-heat-3338.firebaseio.com/posts/"+element.post_id+"/votes");
+                upvotesRef.runTransaction(new Transaction.Handler() {
+                    @Override
+                    public Transaction.Result doTransaction(MutableData currentData) {
+                        if (currentData.getValue() == null) {
+                            currentData.setValue(1);
+                        } else {
+                            currentData.setValue((Long) currentData.getValue() - 1);
+                        }
+                        return Transaction.success(currentData); //we can also abort by calling Transaction.abort()
+                    }
+
+                    @Override
+                    public void onComplete(FirebaseError firebaseError, boolean committed, DataSnapshot currentData) {
+                        //This method will be called once with the results of the transaction.
+                    }
+                });
+                downvote.setClickable(false);
             }
         });
 
