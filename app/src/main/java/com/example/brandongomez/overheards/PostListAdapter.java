@@ -126,7 +126,7 @@ public class PostListAdapter extends ArrayAdapter<PostElement>{
                 downvote.setClickable(false);
             }
         });
-        if(element.username.compareTo("hello")==0) {
+        if(element.username.compareTo("hello")==0 || element.username.compareTo("TreeHugger")==0) {
             //convert from image string
             byte[] imageAsBytes = Base64.decode(element.profile_pic, Base64.DEFAULT);
             Bitmap bmp = BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
