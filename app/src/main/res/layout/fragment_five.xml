@@ -15,14 +15,20 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_above="@+id/yourComments"
-        android:layout_below="@+id/yourPosts" />
+        android:layout_below="@+id/yourPosts"
+        android:background="@drawable/textinputborder"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10.0sp"/>
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/commentListView"
         android:layout_below="@+id/yourComments"
-        android:layout_above="@+id/settingsButton" />
+        android:layout_above="@+id/settingsButton"
+        android:background="@drawable/textinputborder"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10.0sp"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -56,6 +62,17 @@
         android:textStyle="bold"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Log Out"
+        android:id="@+id/btn_log_out"
+        android:layout_gravity="center_horizontal"
+        android:onClick="logout"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/textView14"
+        android:layout_toStartOf="@+id/textView14" />
 
 
 </RelativeLayout>

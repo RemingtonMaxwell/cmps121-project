@@ -111,11 +111,11 @@ public class FiveFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_five, container, false);
         mView=view;
-        fillSettings();
+
         return view;
     }
 
-    public void fillSettings(){
+    /*public void fillSettings(){
         Log.i("Fifth Fragment", "settings");
         String userId = getActivity().getIntent().getExtras().getString("user_id");
         Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/users/"+userId);
@@ -140,7 +140,7 @@ public class FiveFragment extends Fragment {
                 System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
-    }
+    }*/
 
 
     @Override

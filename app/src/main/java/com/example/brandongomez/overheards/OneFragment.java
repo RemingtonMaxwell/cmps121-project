@@ -115,7 +115,7 @@ public class OneFragment extends Fragment implements AdapterView.OnItemSelectedL
                                int pos, long id) {
         String spinnerdisplay = mspin.getSelectedItem().toString();
         String spinnerdisplaydisplay = spinDisplay.getSelectedItem().toString();
-        Toast.makeText(this.getContext(), spinnerdisplay +" "+ spinnerdisplaydisplay, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this.getContext(), spinnerdisplay +" "+ spinnerdisplaydisplay, Toast.LENGTH_SHORT).show();
         // An item was selected. You can retrieve the selected item using
         // parent.getItemAtPosition(pos)
     }

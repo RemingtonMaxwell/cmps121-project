@@ -152,6 +152,13 @@ public class MainActivity extends AppCompatActivity{
 
     public void settingsView(View v){
         Intent intent = new Intent(this, SettingsActivity.class);
+        Bundle b = getIntent().getExtras();
+        String pass = b.getString("password");
+        String userID = b.getString("user_id");
+        String em = b.getString("email");
+        intent.putExtra("password", pass);
+        intent.putExtra("user_id", userID);
+        intent.putExtra("email", em);
         startActivity(intent);//pass the cuisine to the search activity for searching
 
     }
