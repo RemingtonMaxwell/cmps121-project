@@ -2,7 +2,10 @@ package com.example.brandongomez.overheards;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,11 +102,11 @@ public class PostListAdapter extends ArrayAdapter<PostElement>{
                 upvotes.setText(element.votedown());
                 int counter = element.clickCountDown();
 
-                if(counter == -1) {
+                if (counter == -1) {
                     downvote.setClickable(false);
                 }
                 upvote.setClickable(true);
-                Firebase upvotesRef = new Firebase("https://vivid-heat-3338.firebaseio.com/posts/"+element.post_id+"/votes");
+                Firebase upvotesRef = new Firebase("https://vivid-heat-3338.firebaseio.com/posts/" + element.post_id + "/votes");
                 upvotesRef.runTransaction(new Transaction.Handler() {
                     @Override
                     public Transaction.Result doTransaction(MutableData currentData) {
@@ -123,8 +126,15 @@ public class PostListAdapter extends ArrayAdapter<PostElement>{
                 downvote.setClickable(false);
             }
         });
-
-        profile.setImageResource(R.drawable.flanfox);
+        if(element.username.compareTo("hello")==0) {
+            //convert from image string
+            byte[] imageAsBytes = Base64.decode(element.profile_pic, Base64.DEFAULT);
+            Bitmap bmp = BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+            profile.setImageBitmap(bitmap);
+        }else {
+            profile.setImageResource(R.drawable.flanfox);
+        }
         tv.setTextColor(Color.BLACK);
         name.setTextColor(Color.BLACK);
         tv.setText(element.content);

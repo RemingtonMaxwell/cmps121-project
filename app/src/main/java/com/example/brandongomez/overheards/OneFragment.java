@@ -100,7 +100,10 @@ public class OneFragment extends Fragment implements AdapterView.OnItemSelectedL
                 aList.clear();
                 for (DataSnapshot postSnapshot : snapshot.child("posts").getChildren()) {
                     final Post post = postSnapshot.getValue(Post.class);
-                            aList.add(0, new PostElement(post.getContent(), "pic", (String) snapshot.child("users").child(post.getUser_id()).child("userName").getValue(), post.getTimestamp(), String.valueOf(post.getVotes()), post.getPost_id()));
+                            aList.add(0, new PostElement(post.getContent(),
+                                    (String) snapshot.child("users").child(post.getUser_id()).child("profilePic").getValue(),
+                                    (String) snapshot.child("users").child(post.getUser_id()).child("userName").getValue(),
+                                    post.getTimestamp(), String.valueOf(post.getVotes()), post.getPost_id()));
                             adapter.notifyDataSetChanged();
                 }
             }

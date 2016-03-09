@@ -18,7 +18,18 @@ public class User {
     private List<String> posts = new ArrayList<String>();
     private List<Location> locations=new ArrayList<Location>();
     private List<String> comments = new ArrayList<String>();
+    private String profilePic;
 
+    public User(String emailAddress, String user_id,Location currentLocation, String firstName,
+                String lastName, String userName, String profilePic){
+        this.emailAddress=emailAddress;
+        this.user_id=user_id;
+        this.currentLocation=currentLocation;
+        this.firstName=firstName;
+        this.lastName=lastName;
+        this.userName=userName;
+        this.profilePic=profilePic;
+    }
     public User(String emailAddress, String user_id,Location currentLocation, String firstName,
                 String lastName, String userName){
         this.emailAddress=emailAddress;
@@ -27,6 +38,7 @@ public class User {
         this.firstName=firstName;
         this.lastName=lastName;
         this.userName=userName;
+        this.profilePic="";
     }
     public User() {
         // empty default constructor, necessary for Firebase to be able to deserialize users
@@ -81,6 +93,8 @@ public class User {
     public void addPost(String newPost){
         posts.add(newPost);
     }
+
+    public String getProfilePic() {return profilePic;}
 
     public void removePost(String post){
         for(int i=0;i<posts.size();i++){
