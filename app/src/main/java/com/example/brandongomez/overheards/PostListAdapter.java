@@ -38,7 +38,7 @@ public class PostListAdapter extends ArrayAdapter<PostElement>{
     public View getView(int position, View convertView, ViewGroup parent) {
         LinearLayout newView;
         pos = position;
-        Log.i("PostAdpater", ""+pos);
+        Log.i("PostAdapter", ""+pos);
 
         final PostElement element  = getItem(position);
         final int votes = Integer.parseInt(element.votes);

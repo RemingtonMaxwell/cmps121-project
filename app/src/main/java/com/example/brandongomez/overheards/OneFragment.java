@@ -85,7 +85,7 @@ public class OneFragment extends Fragment implements AdapterView.OnItemSelectedL
     }
 
     private void getPosts(){
-        Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/posts");
+        Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
         Query query;
         if(spinnerdisplaydisplay.equals("recent")) {
             query = database.orderByChild("timestamp").limitToLast(55);
@@ -94,14 +94,14 @@ public class OneFragment extends Fragment implements AdapterView.OnItemSelectedL
             query = database.orderByChild("votes").limitToFirst(55);
         }
         // Attach an listener to read the data at our posts reference
-        query.addValueEventListener(new ValueEventListener() {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 aList.clear();
-                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    Post post = postSnapshot.getValue(Post.class);
-                    aList.add(0, new PostElement(post.getContent(), "pic", post.getUser_id(), post.getTimestamp(), String.valueOf(post.getVotes()), post.getPost_id()));
-                    adapter.notifyDataSetChanged();
+                for (DataSnapshot postSnapshot : snapshot.child("posts").getChildren()) {
+                    final Post post = postSnapshot.getValue(Post.class);
+                            aList.add(0, new PostElement(post.getContent(), "pic", (String) snapshot.child("users").child(post.getUser_id()).child("userName").getValue(), post.getTimestamp(), String.valueOf(post.getVotes()), post.getPost_id()));
+                            adapter.notifyDataSetChanged();
                 }
             }
 

@@ -15,9 +15,9 @@ public class User {
     private String emailAddress;
     private String user_id;
     private Location currentLocation;
-    private List<Post> posts = new ArrayList<Post>();
+    private List<String> posts = new ArrayList<String>();
     private List<Location> locations=new ArrayList<Location>();
-    private List<Comment> comments = new ArrayList<Comment>();
+    private List<String> comments = new ArrayList<String>();
 
     public User(String emailAddress, String user_id,Location currentLocation, String firstName,
                 String lastName, String userName){
@@ -74,15 +74,15 @@ public class User {
         return currentLocation;
     }
 
-    public List<Post> getPosts(){
+    public List<String> getPosts(){
         return posts;
     }
 
-    public void addPost(Post newPost){
+    public void addPost(String newPost){
         posts.add(newPost);
     }
 
-    public void removePost(Post post){
+    public void removePost(String post){
         for(int i=0;i<posts.size();i++){
             if(posts.get(i).equals(post)){
                 posts.remove(post);
@@ -106,15 +106,15 @@ public class User {
         }
     }
 
-    public List<Comment> getComments(){
+    public List<String> getComments(){
         return comments;
     }
 
-    public void addComment(Comment newComment){
+    public void addComment(String newComment){
         comments.add(newComment);
     }
 
-    public void removeComment(Comment comment){
+    public void removeComment(String comment){
         for (int i=0; i<comments.size();i++){
             if(comments.get(i).equals(comment)){
                 comments.remove(comment);
