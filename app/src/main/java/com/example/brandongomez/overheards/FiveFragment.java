@@ -1,8 +1,10 @@
 package com.example.brandongomez.overheards;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 
 import java.util.HashMap;
@@ -142,9 +145,43 @@ public class FiveFragment extends Fragment {
         });
     }*/
 
+    private void getPosts(View v){
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        final String userID = settings.getString("user_id", null);
+        Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
+        // Attach an listener to read the data at our posts reference
+        database.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                aList.clear();
+                for (DataSnapshot postSnapshot : snapshot.child("users").getChildren()) {
+                    final User users = postSnapshot.getValue(User.class);
+                    if(users.getUser_id().equals(userID)) {
+                        List<String> myPosts = users.getPosts();
+                        for(int i=0;i<myPosts.size();i++){
+                            String post=myPosts.get(i);
+                            String content=(String)snapshot.child("posts").child(post).child("content").getValue();
+                            String timeStamp=(String)snapshot.child("posts").child(post).child("timestamp").getValue();
+                            aList.add(0,new ListElement(content,timeStamp));
+                        }
+                    }
+                   // final Post post = postSnapshot.getValue(Post.class);
+                   // aList.add(0, new ListElement(users.getPosts(), );
+                    aa.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+            }
+        });
+    }
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        //SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         super.onViewCreated(view, savedInstanceState);
         aa = new MyAdapter(this.getActivity(), R.layout.list_element, aList);
         commentAdapter = new MyAdapter(this.getActivity(), R.layout.list_element, cList);
@@ -152,20 +189,21 @@ public class FiveFragment extends Fragment {
         ListView cListView = (ListView) view.findViewById(R.id.commentListView);
         myListView.setAdapter(aa);
         cListView.setAdapter(commentAdapter);
-        aa.notifyDataSetChanged();
-        commentAdapter.notifyDataSetChanged();
-        for (int i = 0; i < 8; ++i) {
+        //aa.notifyDataSetChanged();
+        getPosts(view);
+        //commentAdapter.notifyDataSetChanged();
+        /*for (int i = 0; i < 8; ++i) {
             aList.add(new ListElement("July 21st", "Hello World!"));
 
         }
         for (int i = 0; i < 8; ++i) {
             cList.add(new ListElement("July 21st", "Hello World!"));
 
-        }
+        }*/
         // We notify the ArrayList adapter that the underlying list has changed,
         // triggering a re-rendering of the list.
-        aa.notifyDataSetChanged();
-        commentAdapter.notifyDataSetChanged();
+        //aa.notifyDataSetChanged();
+        //commentAdapter.notifyDataSetChanged();
 
     }
 
