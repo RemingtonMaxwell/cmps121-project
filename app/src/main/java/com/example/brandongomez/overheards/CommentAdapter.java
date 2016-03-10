@@ -1,7 +1,10 @@
 package com.example.brandongomez.overheards;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.util.Base64;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,7 +53,10 @@ public class CommentAdapter extends ArrayAdapter<CommentElement>{
         TextView name = (TextView) newView.findViewById(R.id.c_username);
         TextView time = (TextView) newView.findViewById(R.id.c_timestamp);
 
-        profile.setImageResource(R.drawable.flanfox);
+       // profile.setImageResource(R.drawable.flanfox);
+        byte[] imageAsBytes = Base64.decode(c_element.c_profile_pic, Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+        profile.setImageBitmap(bitmap);
         tv.setTextColor(Color.BLACK);
         name.setTextColor(Color.BLACK);
         tv.setText(c_element.c_content);
