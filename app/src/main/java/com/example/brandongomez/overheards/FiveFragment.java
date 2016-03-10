@@ -162,7 +162,7 @@ public class FiveFragment extends Fragment {
                             String post=myPosts.get(i);
                             String content=(String)snapshot.child("posts").child(post).child("content").getValue();
                             String timeStamp=(String)snapshot.child("posts").child(post).child("timestamp").getValue();
-                            aList.add(0,new ListElement(content,timeStamp));
+                            aList.add(0,new ListElement(timeStamp,content));
                         }
                     }
                    // final Post post = postSnapshot.getValue(Post.class);
