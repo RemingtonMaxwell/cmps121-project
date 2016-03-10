@@ -66,6 +66,7 @@ public class Post {
     public String getType(){
         return type;
     }
+
     public int getVotes(){
         return votes;
     }

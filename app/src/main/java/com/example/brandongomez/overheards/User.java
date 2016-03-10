@@ -15,10 +15,21 @@ public class User {
     private String emailAddress;
     private String user_id;
     private Location currentLocation;
-    private List<Post> posts = new ArrayList<Post>();
+    private List<String> posts = new ArrayList<String>();
     private List<Location> locations=new ArrayList<Location>();
-    private List<Comment> comments = new ArrayList<Comment>();
+    private List<String> comments = new ArrayList<String>();
+    private String profilePic;
 
+    public User(String emailAddress, String user_id,Location currentLocation, String firstName,
+                String lastName, String userName, String profilePic){
+        this.emailAddress=emailAddress;
+        this.user_id=user_id;
+        this.currentLocation=currentLocation;
+        this.firstName=firstName;
+        this.lastName=lastName;
+        this.userName=userName;
+        this.profilePic=profilePic;
+    }
     public User(String emailAddress, String user_id,Location currentLocation, String firstName,
                 String lastName, String userName){
         this.emailAddress=emailAddress;
@@ -27,6 +38,7 @@ public class User {
         this.firstName=firstName;
         this.lastName=lastName;
         this.userName=userName;
+        this.profilePic="";
     }
     public User() {
         // empty default constructor, necessary for Firebase to be able to deserialize users
@@ -74,15 +86,17 @@ public class User {
         return currentLocation;
     }
 
-    public List<Post> getPosts(){
+    public List<String> getPosts(){
         return posts;
     }
 
-    public void addPost(Post newPost){
+    public void addPost(String newPost){
         posts.add(newPost);
     }
 
-    public void removePost(Post post){
+    public String getProfilePic() {return profilePic;}
+
+    public void removePost(String post){
         for(int i=0;i<posts.size();i++){
             if(posts.get(i).equals(post)){
                 posts.remove(post);
@@ -106,15 +120,15 @@ public class User {
         }
     }
 
-    public List<Comment> getComments(){
+    public List<String> getComments(){
         return comments;
     }
 
-    public void addComment(Comment newComment){
+    public void addComment(String newComment){
         comments.add(newComment);
     }
 
-    public void removeComment(Comment comment){
+    public void removeComment(String comment){
         for (int i=0; i<comments.size();i++){
             if(comments.get(i).equals(comment)){
                 comments.remove(comment);

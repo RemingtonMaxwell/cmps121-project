@@ -87,8 +87,6 @@ public class MainActivity extends AppCompatActivity{
     double latitude, longitude;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -224,12 +222,11 @@ public class MainActivity extends AppCompatActivity{
                     longitude = (double) snapshot.child("longitude").getValue();
                     Post p = new Post(overheard, user_id, new Location(latitude, longitude), spinnerText, dateStr);
                     Firebase ref1 = database.child("posts").child(p.getPost_id());
+                    addPost(p);
                     ref1.setValue(p);
                 }
-
                 @Override
                 public void onCancelled(FirebaseError firebaseError) {
-
                 }
             });
             Toast.makeText(this, "Overheard posted", Toast.LENGTH_SHORT).show();
@@ -240,6 +237,20 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
+    public void addPost(final Post p){
+        final Firebase ref = new Firebase("https://vivid-heat-3338.firebaseio.com/users/"+p.getUser_id());
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                user.addPost(p.getPost_id());
+                ref.setValue(user);
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+            }
+        });
+    }
     public void updateLastName(View v){
         final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/users");
         database.addValueEventListener(new ValueEventListener() {

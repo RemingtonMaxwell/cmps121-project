@@ -104,6 +104,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
         Firebase.setAndroidContext(this);
         final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
+        //Firebase ref = new Firebase("https://vivid-heat-3338.firebaseio.com/posts/");
+        //ref.removeValue();
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         final SharedPreferences.Editor e = settings.edit();
         mUserEmail=settings.getString("email",null);

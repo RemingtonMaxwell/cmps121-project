@@ -45,6 +45,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:text="New Text"
         android:id="@+id/content"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -58,7 +59,7 @@
         android:layout_height="28dp"
         android:text="More"
         android:id="@+id/more"
-        android:textColor="#0000FF"
+        android:textColor="#2c6d60"
         android:layout_below="@+id/content"
         android:layout_alignLeft="@+id/content"
         android:layout_alignStart="@+id/content"
