@@ -2,13 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/postborder"
-    >
+    android:background="@drawable/postborder">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageView"
+        android:id="@+id/fp_imageView"
         android:adjustViewBounds="true"
         android:maxWidth="60dp"
         android:maxHeight="60dp"
@@ -25,10 +24,10 @@
         android:layout_height="28dp"
         android:text="New Text"
         android:id="@+id/fp_username"
-        android:layout_toRightOf="@+id/imageView"
-        android:layout_toEndOf="@+id/imageView"
+        android:layout_toRightOf="@+id/fp_imageView"
+        android:layout_toEndOf="@+id/fp_imageView"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_alignTop="@+id/imageView"
+        android:layout_alignTop="@+id/fp_imageView"
         android:layout_marginLeft="30dp" />
 
     <TextView
@@ -43,12 +42,13 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:text="New Text"
         android:id="@+id/fp_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_below="@+id/imageView"
-        android:layout_alignLeft="@+id/imageView"
-        android:layout_alignStart="@+id/imageView"
+        android:layout_below="@+id/fp_imageView"
+        android:layout_alignLeft="@+id/fp_imageView"
+        android:layout_alignStart="@+id/fp_imageView"
         android:layout_marginRight="30dp" />
 
     <TextView

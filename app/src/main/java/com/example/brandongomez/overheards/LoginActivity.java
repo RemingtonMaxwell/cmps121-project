@@ -467,7 +467,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/users");
         //first see if user already exists in database
 
-        database.addValueEventListener(new ValueEventListener() {
+        database.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Firebase ref = database.child(user_id).child("currentLocation");
@@ -505,7 +505,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     public void forgotPassword(View v){
         final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/users");
-        database.addValueEventListener(new ValueEventListener() {
+        database.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 System.out.println("There are " + snapshot.getChildrenCount() + " users");

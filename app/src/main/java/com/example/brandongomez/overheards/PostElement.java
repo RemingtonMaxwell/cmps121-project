@@ -45,4 +45,8 @@ public class PostElement {
         count--;
         return count;
     }
+
+    public String getPost_id(){
+        return post_id;
+    }
 }

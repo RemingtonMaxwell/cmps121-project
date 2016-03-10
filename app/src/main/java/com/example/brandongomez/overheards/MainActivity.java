@@ -110,7 +110,6 @@ public class MainActivity extends AppCompatActivity{
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new OneFragment(), "Top");
-        //adapter.addFragment(new TwoFragment(), "Recent");
         adapter.addFragment(new ThreeFragment(), "Map");
         adapter.addFragment(new FourFragment(), "Post");
         adapter.addFragment(new FiveFragment(), "You");
@@ -177,7 +176,7 @@ public class MainActivity extends AppCompatActivity{
 
     public void updateFirstName(View v) {
         final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/users");
-        database.addValueEventListener(new ValueEventListener() {
+        database.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Firebase ref = database.child(getIntent().getExtras().getString("user_id"));
@@ -215,7 +214,7 @@ public class MainActivity extends AppCompatActivity{
             final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
             System.out.println(getIntent().getExtras().getString("user_id"));
             final Firebase ref = database.child("users").child(getIntent().getExtras().getString("user_id")).child("currentLocation");
-            ref.addValueEventListener(new ValueEventListener() {
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     latitude = (double) snapshot.child("latitude").getValue();
@@ -253,7 +252,7 @@ public class MainActivity extends AppCompatActivity{
     }
     public void updateLastName(View v){
         final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/users");
-        database.addValueEventListener(new ValueEventListener() {
+        database.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Firebase ref = database.child(getIntent().getExtras().getString("user_id"));
@@ -272,7 +271,7 @@ public class MainActivity extends AppCompatActivity{
     }
     public void updateUserName(View v){
         final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/users");
-        database.addValueEventListener(new ValueEventListener() {
+        database.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Firebase ref = database.child(getIntent().getExtras().getString("user_id"));
@@ -304,7 +303,7 @@ public class MainActivity extends AppCompatActivity{
         if(!overheard.equals("")) {
             Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
             Firebase ref = database.child("users").child(getIntent().getExtras().getString("user_id")).child("currentLocation");
-            ref.addValueEventListener(new ValueEventListener() {
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     latitude = (double) snapshot.child("latitude").getValue();
@@ -341,7 +340,7 @@ public class MainActivity extends AppCompatActivity{
     }
     public void updateEmailAddress(View v){
         final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/users");
-        database.addValueEventListener(new ValueEventListener() {
+        database.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 final Firebase ref = database.child(getIntent().getExtras().getString("user_id"));

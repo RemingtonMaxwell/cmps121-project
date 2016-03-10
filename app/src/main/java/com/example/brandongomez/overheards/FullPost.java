@@ -2,9 +2,12 @@ package com.example.brandongomez.overheards;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -30,8 +38,10 @@ public class FullPost extends AppCompatActivity{
     public TextView fp_timestamp;
     public TextView fp_content;
     public TextView fp_upvotes;
+    public ImageView fp_imageview;
     public Button fp_like;
     public Button fp_dislike;
+    private String post_id;
 
     public FullPost(){}
 
@@ -43,18 +53,17 @@ public class FullPost extends AppCompatActivity{
         adapter = new CommentAdapter(this, R.layout.comment_element, aList);
 
         Intent intent = getIntent();
-        Log.i("post", intent.getExtras().getString("test"));
+        Log.i("post", intent.getExtras().getString("post_id"));
+        post_id=intent.getExtras().getString("post_id");
+        myListView=(ListView) findViewById(R.id.commentList);
+        fp_username=(TextView) findViewById(R.id.fp_username);
+        fp_timestamp=(TextView) findViewById(R.id.fp_timestamp);
+        fp_content=(TextView) findViewById(R.id.fp_content);
+        fp_upvotes=(TextView) findViewById(R.id.fp_votes);
+        fp_imageview=(ImageView) findViewById(R.id.fp_imageView);
+        }
 
-
-        myListView = (ListView)findViewById(R.id.commentList);
-        fp_username = (TextView)findViewById(R.id.username);
-        fp_timestamp = (TextView)findViewById(R.id.timestamp);
-        fp_content = (TextView)findViewById(R.id.content);
-        fp_upvotes = (TextView)findViewById(R.id.votes);
-
-    }
-
-    @Override
+        @Override
     public void onResume(){
         super.onResume();
         myListView.setAdapter(adapter);
@@ -66,46 +75,40 @@ public class FullPost extends AppCompatActivity{
         //fp_upvotes.setText(pfpElement.votes);
 
         getComments();
+            displayPost();
     }
 
     private void getComments(){
-        /* HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        // set your desired log level
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient httpClient = new OkHttpClient.Builder()
-                .addInterceptor(logging)
-                .build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://luca-teaching.appspot.com/localmessages/default/")
-                .addConverterFactory(GsonConverterFactory.create())    //parse Gson string
-                .client(httpClient)    //add logging
-                .build();
-
-        getMessagesApi getMessageService = retrofit.create(getMessagesApi.class);
-
-        Call<GetMessages> getMessages = getMessageService.getMessagesFromApi(MainActivity.lat, MainActivity.lng, MainActivity.user_id);
-
-        //Call retrofit asynchronously
-        getMessages.enqueue(new Callback<GetMessages>() {
-            @Override
-            public void onResponse(Response<GetMessages> response) {
-                List<ResultList> results = getMessages(response.body());
-                aList.clear();
-                Log.i(CHAT_LOG_TAG, String.valueOf(results.size()));
-                for (int i = results.size() - 1; i >= 0; i--) {
-                    Log.i(CHAT_LOG_TAG, results.get(i).getNickname());
-                    Log.i(CHAT_LOG_TAG, results.get(i).getMessage());
-                    Log.i(CHAT_LOG_TAG, results.get(i).getMessageId());
-                    Log.i(CHAT_LOG_TAG, results.get(i).getTimestamp());
-                    Log.i(CHAT_LOG_TAG, results.get(i).getUserId());
-                    aList.add(new ListElement(results.get(i).getTimestamp(), results.get(i).getMessage(), results.get(i).getNickname(), results.get(i).getMessageId(), results.get(i).getUserId()));
-                }
-                adapter.notifyDataSetChanged();*/
+       // aList.clear();
         aList.add(new CommentElement("SO YOU WANNA BE A MASTER OF POKEMON", "pic", "Cynthia","time"));
         aList.add(new CommentElement("UNDERSTAND THE SECRETS AND HAVE SOME FUN", "pic", "Wallace", "time"));
         aList.add(new CommentElement("SO YOU WANNA BE A MASTER OF POKEMON", "pic", "Juan", "time"));
         aList.add(new CommentElement("DO YOU HAVE THE SKILLS TO BE NUMBER ONE?", "pic", "Alder", "time"));
         adapter.notifyDataSetChanged();
+    }
+
+    private void displayPost(){
+        Firebase.setAndroidContext(this);
+        Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
+        database.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Post post=snapshot.child("posts").child(post_id).getValue(Post.class);
+                //fp_username.setText(post.get);
+                fp_content.setText(post.getContent());
+                fp_upvotes.setText(Integer.toString(post.getVotes()));
+                fp_username.setText((String) snapshot.child("users").child(post.getUser_id()).child("userName").getValue());
+                fp_timestamp.setText(post.getTimestamp());
+                byte[] imageAsBytes = Base64.decode((String) snapshot.child("users").child(post.getUser_id()).child("profilePic").getValue(), Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+                fp_imageview.setImageBitmap(bitmap);
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+            }
+        });
+
+
+
     }
 }

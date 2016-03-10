@@ -85,6 +85,7 @@ public class OneFragment extends Fragment implements AdapterView.OnItemSelectedL
     }
 
     private void getPosts(){
+        Firebase.setAndroidContext(getActivity());
         Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
         Query query;
         if(spinnerdisplaydisplay.equals("recent")) {
@@ -104,6 +105,7 @@ public class OneFragment extends Fragment implements AdapterView.OnItemSelectedL
                                     (String) snapshot.child("users").child(post.getUser_id()).child("profilePic").getValue(),
                                     (String) snapshot.child("users").child(post.getUser_id()).child("userName").getValue(),
                                     post.getTimestamp(), String.valueOf(post.getVotes()), post.getPost_id()));
+
                             adapter.notifyDataSetChanged();
                 }
             }

@@ -63,7 +63,7 @@
         android:layout_below="@+id/content"
         android:layout_alignLeft="@+id/content"
         android:layout_alignStart="@+id/content"
-        android:onClick="viewFullPost"/>
+        />
 
     <TextView
         android:layout_width="match_parent"

@@ -20,6 +20,7 @@ import com.firebase.client.Transaction;
 import com.firebase.client.MutableData;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.DataSnapshot;
+import android.content.Intent;
 
 import java.util.List;
 
@@ -64,6 +65,17 @@ public class PostListAdapter extends ArrayAdapter<PostElement>{
         final TextView upvotes = (TextView)newView.findViewById(R.id.votes);
         final Button upvote = (Button)newView.findViewById(R.id.upvoteButton);
         final Button downvote = (Button)newView.findViewById(R.id.downvoteButton);
+        TextView viewFullPost = (TextView) newView.findViewById(R.id.more);
+
+        viewFullPost.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, FullPost.class);
+                intent.putExtra("post_id", element.getPost_id());
+                context.startActivity(intent);
+            }
+
+        });
 
         upvote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,15 +138,10 @@ public class PostListAdapter extends ArrayAdapter<PostElement>{
                 downvote.setClickable(false);
             }
         });
-        if(element.username.compareTo("hello")==0 || element.username.compareTo("TreeHugger")==0) {
             //convert from image string
-            byte[] imageAsBytes = Base64.decode(element.profile_pic, Base64.DEFAULT);
-            Bitmap bmp = BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
-            profile.setImageBitmap(bitmap);
-        }else {
-            profile.setImageResource(R.drawable.flanfox);
-        }
+        byte[] imageAsBytes = Base64.decode(element.profile_pic, Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+        profile.setImageBitmap(bitmap);
         tv.setTextColor(Color.BLACK);
         name.setTextColor(Color.BLACK);
         tv.setText(element.content);
