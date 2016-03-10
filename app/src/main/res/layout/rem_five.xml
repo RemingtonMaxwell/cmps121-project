@@ -118,11 +118,26 @@
             android:layout_height="wrap_content">
 
             <Button
+                android:visibility="visible"
+                android:text="Update"
+                android:id="@+id/edit_first_name"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:background="@drawable/buttonshapepost"
+                android:shadowColor="#DDFFE0"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"
+                android:onClick="updateFirstName"/>
+
+            <!--Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Update"
                 android:id="@+id/edit_first_name"
-                android:onClick="updateFirstName"/>
+                android:onClick="updateFirstName"/-->
 
             <Button
                 android:layout_width="wrap_content"

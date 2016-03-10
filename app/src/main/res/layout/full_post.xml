@@ -62,6 +62,22 @@
         android:layout_marginRight="200dp" />
 
     <Button
+        android:text="Like"
+        android:id="@+id/fp_upvoteButton"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:background="@drawable/buttonshapepost"
+        android:shadowColor="#DDFFE0"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
+        android:layout_below="@+id/imageView"
+        android:layout_alignLeft="@+id/fp_timestamp"
+        android:layout_alignStart="@+id/fp_timestamp" />
+
+    <!--Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
@@ -69,9 +85,25 @@
         android:id="@+id/fp_upvoteButton"
         android:layout_alignBottom="@+id/fp_votes"
         android:layout_alignLeft="@+id/fp_timestamp"
-        android:layout_alignStart="@+id/fp_timestamp" />
+        android:layout_alignStart="@+id/fp_timestamp" /-->
 
     <Button
+        android:text="Ew"
+        android:id="@+id/fp_downvoteButton"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:background="@drawable/buttonshapepost"
+        android:shadowColor="#DDFFE0"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
+        android:layout_below="@+id/imageView"
+        android:layout_alignRight="@+id/fp_content"
+        android:layout_alignEnd="@+id/fp_content" />
+
+    <!--Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
@@ -79,7 +111,7 @@
         android:id="@+id/fp_downvoteButton"
         android:layout_alignBottom="@+id/fp_votes"
         android:layout_toRightOf="@+id/fp_upvoteButton"
-        android:layout_toEndOf="@+id/fp_upvoteButton" />
+        android:layout_toEndOf="@+id/fp_upvoteButton" /-->
 
     <TextView
         android:layout_width="wrap_content"

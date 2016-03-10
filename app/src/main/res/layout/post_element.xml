@@ -76,6 +76,22 @@
         android:layout_marginRight="200dp" />
 
     <Button
+        android:text="Like"
+        android:id="@+id/upvoteButton"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:background="@drawable/buttonshapepost"
+        android:shadowColor="#DDFFE0"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
+        android:layout_alignBottom="@+id/votes"
+        android:layout_alignLeft="@+id/timestamp"
+        android:layout_alignStart="@+id/timestamp"/>
+
+    <!--Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
@@ -83,9 +99,25 @@
         android:id="@+id/upvoteButton"
         android:layout_alignBottom="@+id/votes"
         android:layout_alignLeft="@+id/timestamp"
-        android:layout_alignStart="@+id/timestamp" />
+        android:layout_alignStart="@+id/timestamp" /-->
 
     <Button
+        android:text="Ew"
+        android:id="@+id/downvoteButton"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:background="@drawable/buttonshapepost"
+        android:shadowColor="#DDFFE0"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
+        android:layout_alignTop="@+id/upvoteButton"
+        android:layout_alignRight="@+id/content"
+        android:layout_alignEnd="@+id/content" />
+
+    <!--Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
@@ -93,7 +125,7 @@
         android:id="@+id/downvoteButton"
         android:layout_alignBottom="@+id/votes"
         android:layout_toRightOf="@+id/upvoteButton"
-        android:layout_toEndOf="@+id/upvoteButton" />
+        android:layout_toEndOf="@+id/upvoteButton" /-->
 
     <TextView
         android:layout_width="wrap_content"

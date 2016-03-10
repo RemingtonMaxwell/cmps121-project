@@ -120,18 +120,49 @@
         android:layout_gravity="center_horizontal" />
 
     <Button
+        android:text="Add Profile Picture"
+        android:id="@+id/btn_profile_pic"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:background="@drawable/buttonshapepost"
+        android:shadowColor="#DDFFE0"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
+        android:onClick="addProfilePic"
+        android:layout_gravity="center_horizontal" />
+
+    <!--Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Profile Picture"
         android:id="@+id/btn_profile_pic"
         android:layout_gravity="center_horizontal"
-        android:onClick="addProfilePic" />
+        android:onClick="addProfilePic" /-->
 
     <Button
+        android:text="Create Account"
+        android:id="@+id/create_account"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/buttonshapepost"
+        android:shadowColor="#DDFFE0"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
+        android:onClick="createAccount"
+        android:layout_gravity="center_horizontal" />
+
+    <!--Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Create Account"
         android:id="@+id/create_account"
         android:layout_gravity="center_horizontal"
-        android:onClick="createAccount"/>
+        android:onClick="createAccount"/-->
 </LinearLayout>
