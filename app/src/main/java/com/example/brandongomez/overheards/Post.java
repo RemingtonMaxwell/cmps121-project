@@ -18,7 +18,7 @@ public class Post {
     private String type;
     private int votes;
     private String date_heard;
-    private List<Comment> comments = new ArrayList<Comment>();
+    private List<String> comments = new ArrayList<String>();
 
 
     public Post() {
@@ -75,11 +75,11 @@ public class Post {
         return date_heard;
     }
 
-    public List<Comment> getComments(){
+    public List<String> getComments(){
         return comments;
     }
 
-    public void addComment(Comment newComment){
+    public void addComment(String newComment){
         comments.add(newComment);
     }
 

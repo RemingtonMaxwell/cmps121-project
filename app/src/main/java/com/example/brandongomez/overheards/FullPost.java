@@ -2,10 +2,12 @@ package com.example.brandongomez.overheards;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
@@ -14,10 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -26,6 +30,8 @@ import com.firebase.client.ValueEventListener;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Jolina on 3/6/2016.
@@ -42,6 +48,7 @@ public class FullPost extends AppCompatActivity{
     public Button fp_like;
     public Button fp_dislike;
     private String post_id;
+    private String user_id;
 
     public FullPost(){}
 
@@ -51,7 +58,9 @@ public class FullPost extends AppCompatActivity{
         setContentView(R.layout.full_post);
         aList = new ArrayList<CommentElement>();
         adapter = new CommentAdapter(this, R.layout.comment_element, aList);
-
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences.Editor e = settings.edit();
+        user_id = settings.getString("user_id", null);
         Intent intent = getIntent();
         Log.i("post", intent.getExtras().getString("post_id"));
         post_id=intent.getExtras().getString("post_id");
@@ -77,6 +86,38 @@ public class FullPost extends AppCompatActivity{
         getComments();
             displayPost();
     }
+
+    public void addComment(View v){
+        final String comment=((EditText) findViewById(R.id.add_comment)).getText().toString();
+        final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
+        database.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Post post=snapshot.child("posts").child(post_id).getValue(Post.class);
+                User user = snapshot.child("users").child(user_id).getValue(User.class);
+                Comment c = new Comment(post_id,user_id,comment);
+                Firebase ref1 = database.child("comments").child(c.getComment_id());
+                user.addComment(c.getComment_id());
+                //set reference for comment in comments
+                ref1.setValue(c);
+                //set reference for user's list of comments
+                Firebase ref = database.child("users").child(user_id);
+                ref.setValue(user);
+                //set reference for post's list of comments
+                ref = database.child("posts").child(post_id);
+                post.addComment(c.getComment_id());
+                ref.setValue(post);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+        ((EditText) findViewById(R.id.add_comment)).setText("");
+        Toast.makeText(this, "Comment posted.", Toast.LENGTH_SHORT).show();
+    }
+
 
     private void getComments(){
        // aList.clear();

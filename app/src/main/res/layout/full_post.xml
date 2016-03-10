@@ -54,6 +54,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="28dp"
+        android:layout_marginBottom="20dp"
         android:text="New Text"
         android:id="@+id/fp_votes"
         android:layout_below="@+id/fp_content"
@@ -80,7 +81,27 @@
         android:layout_alignBottom="@+id/fp_votes"
         android:layout_toRightOf="@+id/fp_upvoteButton"
         android:layout_toEndOf="@+id/fp_upvoteButton" />
-
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:text="Comment"
+        android:id="@+id/fp_btn_comment"
+        android:layout_height="35dp"
+        android:onClick="addComment"
+        android:layout_alignBottom="@+id/add_comment"
+        android:layout_alignRight="@+id/commentList"
+        android:layout_alignEnd="@+id/commentList" />
+    <EditText
+        android:layout_width="225dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/add_comment"
+        android:layout_above="@+id/fp_comment_indicator"
+        android:layout_alignLeft="@+id/fp_comment_indicator"
+        android:layout_alignStart="@+id/fp_comment_indicator"
+        android:inputType="textMultiLine"
+        android:maxLines="2"
+        android:scrollbars="vertical"
+        android:hint="Add a comment..." />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -97,6 +118,7 @@
         android:id="@+id/fp_comment_indicator"
         android:layout_below="@+id/fp_whitespace"
         android:layout_alignLeft="@+id/fp_content"
+        android:layout_marginTop="10dp"
         android:text="Comments:" />
 
     <ListView
@@ -108,5 +130,7 @@
         android:layout_alignStart="@+id/fp_votes"
         android:layout_alignRight="@+id/fp_content"
         android:layout_alignEnd="@+id/fp_content" />
+
+
 
 </RelativeLayout>
