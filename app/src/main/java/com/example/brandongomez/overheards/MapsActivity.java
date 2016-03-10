@@ -1,17 +1,18 @@
 package com.example.brandongomez.overheards;
 
+import android.location.*;
+import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.content.pm.PackageManager;
 import android.Manifest;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
-import android.location.LocationManager;
 import android.content.Context;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-import android.location.Geocoder;
-import android.location.Address;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.AdapterView;
 import android.widget.TextView;
@@ -20,6 +21,8 @@ import android.graphics.drawable.Drawable;
 import android.graphics.PorterDuff;
 import android.graphics.Bitmap;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -161,20 +164,21 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
                                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
 
 
-                        final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/posts");
-                        database.addValueEventListener(new ValueEventListener() {
+                        final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
+                        database.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot snapshot) {
-                                if (snapshot.hasChild(post_id)) {
-                                    Firebase ref = database.child(post_id).child("location");
+                                if (snapshot.child("posts").hasChild(post_id)) {
+                                    Firebase ref = database.child("posts").child(post_id).child("location");
                                     Map<String, Object> updateMap = new HashMap<String, Object>();
                                     updateMap.put("latitude", latLng.latitude);
                                     updateMap.put("longitude", latLng.longitude);
                                     ref.updateChildren(updateMap);
-                                    for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                                    addPost(snapshot.child("posts").child(post_id).getValue(Post.class));
+                                    for (DataSnapshot postSnapshot : snapshot.child("posts").getChildren()) {
                                         Post post = postSnapshot.getValue(Post.class);
-                                        if(post.getPost_id().compareTo(post_id)==0){
-                                            marker.setTitle(post.getUser_id());
+                                        if (post.getPost_id().compareTo(post_id) == 0) {
+                                            marker.setTitle((String) snapshot.child("users").child(post.getUser_id()).child("userName").getValue());
                                             marker.setSnippet(post.getContent());
                                         }
                                     }
@@ -194,9 +198,29 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
             });
         }
         setUpClusterer();
+        //need to trigger selection events
+        spin.setSelection(1);
+        //spin2.setSelection(1);
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        String provider = locationManager.getBestProvider(criteria, true);
+        Location location = locationManager.getLastKnownLocation(provider);
 
     }
-
+    public void addPost(final Post p){
+        final Firebase ref = new Firebase("https://vivid-heat-3338.firebaseio.com/users/"+p.getUser_id());
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                user.addPost(p.getPost_id());
+                ref.setValue(user);
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+            }
+        });
+    }
     @Override
     public void onInfoWindowClick(Marker marker) {
         // TODO: make it so it goes to the appropriate Overheards screen
@@ -225,12 +249,12 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
     public void onItemSelected (AdapterView < ? > parent, View view, final int pos, long id){
         removeMarkers();
         Firebase.setAndroidContext(this);
-        Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/posts");
+        Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
         // Attach an listener to read the data at our posts reference
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                for (DataSnapshot postSnapshot : snapshot.child("posts").getChildren()) {
                     Post post = postSnapshot.getValue(Post.class);
                     String[] ids = TimeZone.getAvailableIDs(-8 * 60 * 60 * 1000);
                     SimpleTimeZone pdt = new SimpleTimeZone(-8 * 60 * 60 * 1000, ids[0]);
@@ -243,14 +267,18 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
                     Spinner typeSpinner = (Spinner)findViewById(R.id.categorySpinner);
                     String typeSpinnerText = typeSpinner.getSelectedItem().toString();
                     String typePosted = post.getType();
+                    Log.i("overheads map", "post is"+post.getContent());
+                    Log.i("overheards map","year heard is"+parsedDateHeard[0] );
+                    Log.i("overheards map","month heard is"+parsedDateHeard[1] );
+                    Log.i("overheards map","year heard is"+parsedTimeHeard[0] );
                     if (spinnerText.equals("this year")) {
                         if (Integer.valueOf(parsedDateHeard[0]) == date.get(Calendar.YEAR)) {
                             if(typeSpinnerText.equals(typePosted) || typeSpinnerText.equals("all")) {
                                 MyItem offsetItem = new MyItem(post.getLocation().getLatitude(),
                                         post.getLocation().getLongitude(),
-                                        post.getUser_id(),
+                                        (String) snapshot.child("users").child(post.getUser_id()).child("userName").getValue(),
                                         post.getContent());
-                                mClusterManager.addItem(offsetItem);
+                                    mClusterManager.addItem(offsetItem);
                             }
                         }
                     }
@@ -260,7 +288,7 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
                                 if(typeSpinnerText.equals(typePosted) || typeSpinnerText.equals("all")) {
                                     MyItem offsetItem = new MyItem(post.getLocation().getLatitude(),
                                             post.getLocation().getLongitude(),
-                                            post.getUser_id(),
+                                            (String) snapshot.child("users").child(post.getUser_id()).child("userName").getValue(),
                                             post.getContent());
                                     mClusterManager.addItem(offsetItem);
                                 }
@@ -274,7 +302,7 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
                                     if(typeSpinnerText.equals(typePosted) || typeSpinnerText.equals("all")) {
                                         MyItem offsetItem = new MyItem(post.getLocation().getLatitude(),
                                                 post.getLocation().getLongitude(),
-                                                post.getUser_id(),
+                                                (String) snapshot.child("users").child(post.getUser_id()).child("userName").getValue(),
                                                 post.getContent());
                                         mClusterManager.addItem(offsetItem);
                                     }

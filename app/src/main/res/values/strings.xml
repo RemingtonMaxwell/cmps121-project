@@ -13,8 +13,8 @@
     </string-array>
 
     <string-array name="display">
-        <item>Recent</item>
-        <item>Hot</item>
+        <item>recent</item>
+        <item>hot</item>
     </string-array>
 
     <string name="title_activity_maps">Map</string>

@@ -16,8 +16,18 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+import com.firebase.client.Query;
+
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.SimpleTimeZone;
+import java.util.TimeZone;
 
 
 public class OneFragment extends Fragment implements AdapterView.OnItemSelectedListener {
@@ -29,6 +39,8 @@ public class OneFragment extends Fragment implements AdapterView.OnItemSelectedL
     TextView fullPost;
     Button like;
     Button dislike;
+    String spinnerdisplay = "all";
+    String spinnerdisplaydisplay = "recent";
 
 
     public OneFragment() {
@@ -41,6 +53,8 @@ public class OneFragment extends Fragment implements AdapterView.OnItemSelectedL
         aList = new ArrayList<PostElement>();
         adapter = new PostListAdapter(this.getContext(), R.layout.post_element, aList);
         Log.i("First Fragment user id", "here");
+        aList.clear();
+        getPosts();
 
     }
 
@@ -66,56 +80,48 @@ public class OneFragment extends Fragment implements AdapterView.OnItemSelectedL
         super.onResume();
         myListView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        aList.clear();
         getPosts();
     }
 
     private void getPosts(){
-        /* HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        // set your desired log level
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient httpClient = new OkHttpClient.Builder()
-                .addInterceptor(logging)
-                .build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://luca-teaching.appspot.com/localmessages/default/")
-                .addConverterFactory(GsonConverterFactory.create())    //parse Gson string
-                .client(httpClient)    //add logging
-                .build();
-
-        getMessagesApi getMessageService = retrofit.create(getMessagesApi.class);
-
-        Call<GetMessages> getMessages = getMessageService.getMessagesFromApi(MainActivity.lat, MainActivity.lng, MainActivity.user_id);
-
-        //Call retrofit asynchronously
-        getMessages.enqueue(new Callback<GetMessages>() {
+        Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
+        Query query;
+        if(spinnerdisplaydisplay.equals("recent")) {
+            query = database.orderByChild("timestamp").limitToLast(55);
+        }
+        else{
+            query = database.orderByChild("votes").limitToFirst(55);
+        }
+        // Attach an listener to read the data at our posts reference
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onResponse(Response<GetMessages> response) {
-                List<ResultList> results = getMessages(response.body());
+            public void onDataChange(DataSnapshot snapshot) {
                 aList.clear();
-                Log.i(CHAT_LOG_TAG, String.valueOf(results.size()));
-                for (int i = results.size() - 1; i >= 0; i--) {
-                    Log.i(CHAT_LOG_TAG, results.get(i).getNickname());
-                    Log.i(CHAT_LOG_TAG, results.get(i).getMessage());
-                    Log.i(CHAT_LOG_TAG, results.get(i).getMessageId());
-                    Log.i(CHAT_LOG_TAG, results.get(i).getTimestamp());
-                    Log.i(CHAT_LOG_TAG, results.get(i).getUserId());
-                    aList.add(new ListElement(results.get(i).getTimestamp(), results.get(i).getMessage(), results.get(i).getNickname(), results.get(i).getMessageId(), results.get(i).getUserId()));
+                for (DataSnapshot postSnapshot : snapshot.child("posts").getChildren()) {
+                    final Post post = postSnapshot.getValue(Post.class);
+                            aList.add(0, new PostElement(post.getContent(),
+                                    (String) snapshot.child("users").child(post.getUser_id()).child("profilePic").getValue(),
+                                    (String) snapshot.child("users").child(post.getUser_id()).child("userName").getValue(),
+                                    post.getTimestamp(), String.valueOf(post.getVotes()), post.getPost_id()));
+                            adapter.notifyDataSetChanged();
                 }
-                adapter.notifyDataSetChanged();*/
-        aList.clear();
-        aList.add(new PostElement("I WANT TO BE THE VERY BEST", "pic", "Ash Ketchum","time","0"));
-        aList.add(new PostElement("THAT NO ONE EVERY WAS", "pic", "Misty", "time", "0"));
-        aList.add(new PostElement("TO CATCH THEM IS MY REAL QUEST", "pic", "null", "time", "0"));
-        aList.add(new PostElement("TO TRAIN THEM IS MY CAUSE", "pic", "String Not Found", "time", "0"));
-        adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+            }
+        });
     }
 
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
-        String spinnerdisplay = mspin.getSelectedItem().toString();
-        String spinnerdisplaydisplay = spinDisplay.getSelectedItem().toString();
+        spinnerdisplay = mspin.getSelectedItem().toString();
+        spinnerdisplaydisplay = spinDisplay.getSelectedItem().toString();
         Toast.makeText(this.getContext(), spinnerdisplay +" "+ spinnerdisplaydisplay, Toast.LENGTH_SHORT).show();
+        aList.clear();
+        getPosts();
         // An item was selected. You can retrieve the selected item using
         // parent.getItemAtPosition(pos)
     }
