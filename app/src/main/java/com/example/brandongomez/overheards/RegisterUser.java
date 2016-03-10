@@ -74,7 +74,8 @@ public class RegisterUser extends AppCompatActivity {
             try {
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                //bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                bmp.compress(Bitmap.CompressFormat.JPEG,0,stream);
                 bmp.recycle();
                 byte[] byteArray = stream.toByteArray();
                 imageFile = Base64.encodeToString(byteArray, Base64.DEFAULT);

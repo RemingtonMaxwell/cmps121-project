@@ -135,13 +135,16 @@ public class PostListAdapter extends ArrayAdapter<PostElement>{
                         //This method will be called once with the results of the transaction.
                     }
                 });
-                downvote.setClickable(false);
+               // downvote.setClickable(false);
             }
         });
+        BitmapFactory.Options options=new BitmapFactory.Options();// Create object of bitmapfactory's option method for further option use
+        options.inPurgeable = true;
             //convert from image string
         byte[] imageAsBytes = Base64.decode(element.profile_pic, Base64.DEFAULT);
         Bitmap bitmap = BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
         profile.setImageBitmap(bitmap);
+       // profile.setImageResource(R.drawable.flanfox);
         tv.setTextColor(Color.BLACK);
         name.setTextColor(Color.BLACK);
         tv.setText(element.content);

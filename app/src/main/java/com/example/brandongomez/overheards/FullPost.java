@@ -769,17 +769,13 @@ public class FullPost extends AppCompatActivity{
 
 
     private void getComments(){
-        //aList.clear();
-       // aList.add(new CommentElement("SO YOU WANNA BE A MASTER OF POKEMON", "pic", "Cynthia","time"));
-       // aList.add(new CommentElement("UNDERSTAND THE SECRETS AND HAVE SOME FUN", "pic", "Wallace", "time"));
-       // aList.add(new CommentElement("SO YOU WANNA BE A MASTER OF POKEMON", "pic", "Juan", "time"));
-       // aList.add(new CommentElement("DO YOU HAVE THE SKILLS TO BE NUMBER ONE?", "pic", "Alder", "time"));
         final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
         database.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Post post=snapshot.child("posts").child(post_id).getValue(Post.class);
                 List<String> myComments=post.getComments();
+                aList.clear();
                 for(int i=0;i<myComments.size();i++){
                     String comment=myComments.get(i);
                     Comment com=snapshot.child("comments").child(comment).getValue(Comment.class);
