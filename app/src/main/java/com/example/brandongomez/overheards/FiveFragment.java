@@ -39,7 +39,7 @@ public class FiveFragment extends Fragment {
     }
 
     private MyAdapter aa;
-    private MyAdapter commentAdapter;
+    private MyAdapterComments commentAdapter;
 
     private ArrayList<ListElement> aList;
     private ArrayList<ListElement> cList;
@@ -47,14 +47,33 @@ public class FiveFragment extends Fragment {
     private class ListElement {
         ListElement() {
         }
-
-        ListElement(String tl, String t2) {
-            textLabel = tl;
-            textLabel2 = t2;
+        //constructor for posts
+        ListElement(String tl, String t2, String post_id) {
+            content = tl;
+            timestamp = t2;
+            this.post_id=post_id;
+            comment_id="";
+        }
+        ListElement(String tl, String t2, String post_id, String comment_id) {
+            content = tl;
+            timestamp = t2;
+            this.post_id=post_id;
+            this.comment_id=comment_id;
         }
 
-        public String textLabel;
-        public String textLabel2;
+        private String content;
+        private String timestamp;
+        private String post_id;
+        private String comment_id;
+
+        public String getPostId(){
+            return post_id;
+        }
+
+
+        public String getCommentId(){
+            return comment_id;
+        }
     }
     public class MyAdapter extends ArrayAdapter<ListElement> {
 
@@ -69,7 +88,7 @@ public class FiveFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            LinearLayout newView;
+            final LinearLayout newView;
 
             ListElement w = getItem(position);
 
@@ -87,18 +106,113 @@ public class FiveFragment extends Fragment {
             TextView tv = (TextView) newView.findViewById(R.id.itemText2);
             TextView tv2 = (TextView) newView.findViewById(R.id.itemText);
 
-            tv.setText(w.textLabel);
-            tv2.setText(w.textLabel2);
+            tv.setText(w.content);
+            tv2.setText(w.timestamp);
 
 
-            newView.setTag(w.textLabel);
-            newView.setTag(w.textLabel2);
-
+            newView.setTag(w.content);
+            newView.setTag(w.timestamp);
+            TextView deletePost = (TextView) newView.findViewById(R.id.delete_post);
+            deletePost.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i("overheards", "in posts");
+                    getPosts(newView);
+                }
+            });
 
             return newView;
         }
     }
+    public class MyAdapterComments extends ArrayAdapter<ListElement> {
 
+        int resource;
+        Context context;
+
+        public MyAdapterComments(Context _context, int _resource, List<ListElement> items) {
+            super(_context, _resource, items);
+            resource = _resource;
+            context = _context;
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            final LinearLayout newView;
+
+            final ListElement w = getItem(position);
+
+            // Inflate a new view if necessary.
+            if (convertView == null) {
+                newView = new LinearLayout(getContext());
+                String inflater = Context.LAYOUT_INFLATER_SERVICE;
+                LayoutInflater vi = (LayoutInflater) getContext().getSystemService(inflater);
+                vi.inflate(resource, newView, true);
+            } else {
+                newView = (LinearLayout) convertView;
+            }
+
+            // Fills in the view.
+            TextView tv = (TextView) newView.findViewById(R.id.itemText2);
+            TextView tv2 = (TextView) newView.findViewById(R.id.itemText);
+
+            tv.setText(w.content);
+            tv2.setText(w.timestamp);
+
+
+            newView.setTag(w.content);
+            newView.setTag(w.timestamp);
+            TextView deleteComment = (TextView) newView.findViewById(R.id.delete_post);
+            final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
+            deleteComment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i("overheards", "in comments");
+                    //delete comment from database
+                    Firebase comment = database.child("comments").child(w.getCommentId());
+                    Log.i("comment removed is", w.getCommentId());
+                    comment.removeValue();
+                    //delete comment from post
+                    final Firebase postData = database.child("posts").child(w.getPostId());
+                    postData.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot) {
+                            Post post = snapshot.getValue(Post.class);
+                            Log.i("comments are", post.getComments().toString());
+                            post.removeComment(w.getCommentId());
+                            postData.setValue(post);
+
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+                        }
+                    });
+                    //delete comment from user
+                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+                    final SharedPreferences.Editor e = settings.edit();
+                    final Firebase userData = database.child("users").child(settings.getString("user_id",null));
+                    userData.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot) {
+                            User user = snapshot.getValue(User.class);
+                            user.removeComment(w.getCommentId());
+                            userData.setValue(user);
+
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+                        }
+                    });
+
+                   getPosts(newView);
+                }
+
+            });
+
+            return newView;
+        }
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,13 +250,14 @@ public class FiveFragment extends Fragment {
                             String post=myPosts.get(i);
                             String content=(String)snapshot.child("posts").child(post).child("content").getValue();
                             String timeStamp=(String)snapshot.child("posts").child(post).child("timestamp").getValue();
-                            aList.add(0,new ListElement(content,timeStamp));
+                            aList.add(0,new ListElement(content,timeStamp,post));
                         }
                         for(int i=0;i<myComments.size();i++){
-                            String post=myComments.get(i);
-                            String content=(String)snapshot.child("comments").child(post).child("content").getValue();
-                            String timeStamp=(String)snapshot.child("comments").child(post).child("timestamp").getValue();
-                            cList.add(0,new ListElement(content,timeStamp));
+                            String comment =myComments.get(i);
+                            String content=(String)snapshot.child("comments").child(comment).child("content").getValue();
+                            String timeStamp=(String)snapshot.child("comments").child(comment).child("timestamp").getValue();
+                            String post=(String)snapshot.child("comments").child(comment).child("post_id").getValue();
+                            cList.add(0,new ListElement(content,timeStamp,post,comment));
                         }
                 aa.notifyDataSetChanged();
                 commentAdapter.notifyDataSetChanged();
@@ -159,7 +274,7 @@ public class FiveFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         aa = new MyAdapter(this.getActivity(), R.layout.list_element, aList);
-        commentAdapter = new MyAdapter(this.getActivity(), R.layout.list_element, cList);
+        commentAdapter = new MyAdapterComments(this.getActivity(), R.layout.list_element, cList);
         ListView myListView = (ListView) view.findViewById(R.id.postListView);
         ListView cListView = (ListView) view.findViewById(R.id.commentListView);
         myListView.setAdapter(aa);

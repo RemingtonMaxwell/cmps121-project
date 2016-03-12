@@ -6,11 +6,18 @@ package com.example.brandongomez.overheards;
 public class ListElement {
     ListElement() {};
 
-    ListElement(String tl, String bl) {
-        restaurantName = tl;
-        details = bl;
+    ListElement(String tl, String bl, String id) {
+        content = tl;
+        timestamp = bl;
+        this.id=id;
     }
 
-    public String restaurantName;
-    public String details;  //Restaurant details button. Currently not implemented
+    private String content;
+    private String timestamp;
+    private String id;
+
+    public String getId(){
+        return id;
+    }
 }
+

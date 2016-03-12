@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity{
     //private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    String user_id;
+    public String user_id;
     double latitude, longitude;
 
 

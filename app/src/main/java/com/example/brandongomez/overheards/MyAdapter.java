@@ -1,6 +1,7 @@
 package com.example.brandongomez.overheards;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,14 +46,20 @@ public class MyAdapter extends ArrayAdapter<ListElement> {
         TextView tv = (TextView) newView.findViewById(R.id.itemText2);
         TextView tv2 = (TextView) newView.findViewById(R.id.itemText);
 
-        //tv.setText(w.textLabel);
-        //tv2.setText(w.textLabel2);
-
-
-        //newView.setTag(w.textLabel);
-        //newView.setTag(w.textLabel2);
+        TextView deletePost = (TextView) newView.findViewById(R.id.delete_post);
+        deletePost.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+            /*Intent intent = new Intent(context, FullPost.class);
+            intent.putExtra("post_id", element.getPost_id());
+            context.startActivity(intent);*/
+            }
+            });
 
 
         return newView;
     }
-}
+
+        }
+
+

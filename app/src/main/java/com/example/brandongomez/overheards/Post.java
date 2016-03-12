@@ -83,7 +83,7 @@ public class Post {
         comments.add(newComment);
     }
 
-    public void removeComment(Comment comment){
+    public void removeComment(String comment){
         for (int i=0; i<comments.size();i++){
             if(comments.get(i).equals(comment)){
                 comments.remove(comment);
