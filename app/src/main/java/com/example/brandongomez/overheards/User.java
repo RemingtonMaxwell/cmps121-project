@@ -136,5 +136,14 @@ public class User {
         }
     }
 
+    public int getCommentIndex(String comment){
+        for (int i=0; i<comments.size();i++){
+            if(comments.get(i).equals(comment)){
+                return i;
+            }
+        }
+        return -1;
+    }
+
 }
 

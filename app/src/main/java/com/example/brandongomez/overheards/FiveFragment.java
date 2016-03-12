@@ -90,7 +90,7 @@ public class FiveFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             final LinearLayout newView;
 
-            ListElement w = getItem(position);
+            final ListElement w = getItem(position);
 
             // Inflate a new view if necessary.
             if (convertView == null) {
@@ -113,12 +113,80 @@ public class FiveFragment extends Fragment {
             newView.setTag(w.content);
             newView.setTag(w.timestamp);
             TextView deletePost = (TextView) newView.findViewById(R.id.delete_post);
+            final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
             deletePost.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i("overheards", "in posts");
+                    Log.i("overheards", "in posts with post " + w.getPostId());
+
+                    //removes comments on that post from users who made them
+                    database.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot) {
+                            Post post = snapshot.child("posts").child(w.getPostId()).getValue(Post.class);
+                            Log.i("comments are", post.getComments().toString());
+                            List<String> comments = post.getComments();
+                            boolean removed = false;
+                            for (int i = 0; i < comments.size(); i++) {
+                                //get user id from each comment
+                                String userId = (String) snapshot.child("comments").child(comments.get(i)).child("user_id").getValue();
+                                Log.i("overheards user is ", userId);
+                                User user = snapshot.child("users").child(userId).getValue(User.class);
+                                Firebase userData = database.child("users").child(userId);
+                                user.removeComment(comments.get(i));
+                                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+                                final SharedPreferences.Editor e = settings.edit();
+                                if (user.getUser_id().compareTo(settings.getString("user_id", null)) == 0) {
+                                    user.removePost(w.getPostId());
+                                    Firebase postData = database.child("posts").child(w.getPostId());
+                                    postData.removeValue();
+                                    removed = true;
+                                }
+                                Log.i("remove comment ", comments.get(i));
+                                userData.setValue(user);
+                            }
+                            //remove comments
+                            for (int i = 0; i < comments.size(); i++) {
+                                Firebase userData = database.child("comments").child(comments.get(i));
+                                userData.removeValue();
+                            }
+                            if (removed == false) {
+                                //remove post from user
+                                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+                                final SharedPreferences.Editor e = settings.edit();
+                                User user = snapshot.child("users").child(settings.getString("user_id", null)).getValue(User.class);
+                                user.removePost(w.getPostId());
+                                Firebase userData = database.child("users").child(settings.getString("user_id", null));
+                                userData.setValue(user, new Firebase.CompletionListener() {
+                                    @Override
+                                    public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                                        if (firebaseError != null) {
+                                            System.out.println("Data could not be saved. " + firebaseError.getMessage());
+                                        } else {
+                                            Log.i("overheards", "Datasaved");
+                                            //remove post itself
+                                            Firebase postData = database.child("posts").child(w.getPostId());
+                                            postData.removeValue();
+
+                                        }
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+                        }
+                    });
+
+                    //remove post from user
+                    aa.notifyDataSetChanged();
+                    commentAdapter.notifyDataSetChanged();
+                    myListView.invalidateViews();
+                    myListView.invalidateViews();
                     getPosts(newView);
                 }
+
             });
 
             return newView;
@@ -204,7 +272,8 @@ public class FiveFragment extends Fragment {
                         public void onCancelled(FirebaseError firebaseError) {
                         }
                     });
-
+                commentAdapter.notifyDataSetChanged();
+                cListView.invalidateViews();
                    getPosts(newView);
                 }
 
@@ -269,14 +338,15 @@ public class FiveFragment extends Fragment {
             }
         });
     }
-
+    private ListView myListView;
+    private ListView cListView;
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         aa = new MyAdapter(this.getActivity(), R.layout.list_element, aList);
         commentAdapter = new MyAdapterComments(this.getActivity(), R.layout.list_element, cList);
-        ListView myListView = (ListView) view.findViewById(R.id.postListView);
-        ListView cListView = (ListView) view.findViewById(R.id.commentListView);
+         myListView = (ListView) view.findViewById(R.id.postListView);
+         cListView = (ListView) view.findViewById(R.id.commentListView);
         myListView.setAdapter(aa);
         cListView.setAdapter(commentAdapter);
         getPosts(view);
