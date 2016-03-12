@@ -15,7 +15,6 @@
   <component name="ChangeListManager">
     <list default="true" id="935142a1-37a6-417e-9cfd-cadc52725a8c" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/FiveFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/FiveFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/User.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/User.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="cmps121-project.iws" />
@@ -88,7 +87,7 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/FullPost.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="115" column="19" selection-start-line="104" selection-start-column="35" selection-end-line="115" selection-end-column="19" />
+              <caret line="106" column="92" selection-start-line="104" selection-start-column="35" selection-end-line="106" selection-end-column="92" />
               <folding>
                 <element signature="e#4048#4626#0" expanded="true" />
                 <element signature="e#4625#4626#0" expanded="true" />
@@ -132,20 +131,22 @@
       <file leaf-file-name="FiveFragment.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/FiveFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.3025584">
-              <caret line="159" column="55" selection-start-line="159" selection-start-column="55" selection-end-line="159" selection-end-column="55" />
+            <state vertical-scroll-proportion="1.0771972">
+              <caret line="189" column="50" selection-start-line="189" selection-start-column="50" selection-end-line="189" selection-end-column="50" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1821#1822#0" expanded="true" />
                 <element signature="e#1859#1860#0" expanded="true" />
                 <element signature="e#1899#1900#0" expanded="true" />
                 <element signature="e#1940#1941#0" expanded="true" />
-                <element signature="e#3473#8035#0" expanded="true" />
-                <element signature="e#6624#7490#0" expanded="true" />
-                <element signature="e#7489#7490#0" expanded="true" />
-                <element signature="e#8034#8035#0" expanded="true" />
-                <element signature="e#9636#11925#0" expanded="true" />
-                <element signature="e#11924#11925#0" expanded="true" />
+                <element signature="e#3473#8934#0" expanded="true" />
+                <element signature="e#6624#8280#0" expanded="true" />
+                <element signature="e#7373#8163#0" expanded="true" />
+                <element signature="e#8162#8163#0" expanded="true" />
+                <element signature="e#8279#8280#0" expanded="true" />
+                <element signature="e#8933#8934#0" expanded="true" />
+                <element signature="e#10535#12824#0" expanded="true" />
+                <element signature="e#12823#12824#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -2684,12 +2685,14 @@
             <element signature="e#1859#1860#0" expanded="true" />
             <element signature="e#1899#1900#0" expanded="true" />
             <element signature="e#1940#1941#0" expanded="true" />
-            <element signature="e#3473#8035#0" expanded="true" />
-            <element signature="e#6624#7490#0" expanded="true" />
-            <element signature="e#7489#7490#0" expanded="true" />
-            <element signature="e#8034#8035#0" expanded="true" />
-            <element signature="e#9636#11925#0" expanded="true" />
-            <element signature="e#11924#11925#0" expanded="true" />
+            <element signature="e#3473#8934#0" expanded="true" />
+            <element signature="e#6624#8280#0" expanded="true" />
+            <element signature="e#7373#8163#0" expanded="true" />
+            <element signature="e#8162#8163#0" expanded="true" />
+            <element signature="e#8279#8280#0" expanded="true" />
+            <element signature="e#8933#8934#0" expanded="true" />
+            <element signature="e#10535#12824#0" expanded="true" />
+            <element signature="e#12823#12824#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2985,25 +2988,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/PostListAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="29" column="63" selection-start-line="29" selection-start-column="63" selection-end-line="29" selection-end-column="63" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/FullPost.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="115" column="19" selection-start-line="104" selection-start-column="35" selection-end-line="115" selection-end-column="19" />
-          <folding>
-            <element signature="e#4048#4626#0" expanded="true" />
-            <element signature="e#4625#4626#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/MyAdapterComments.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -3037,22 +3021,43 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/PostListAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="29" column="63" selection-start-line="29" selection-start-column="63" selection-end-line="29" selection-end-column="63" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/FullPost.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="106" column="92" selection-start-line="104" selection-start-column="35" selection-end-line="106" selection-end-column="92" />
+          <folding>
+            <element signature="e#4048#4626#0" expanded="true" />
+            <element signature="e#4625#4626#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/FiveFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3025584">
-          <caret line="159" column="55" selection-start-line="159" selection-start-column="55" selection-end-line="159" selection-end-column="55" />
+        <state vertical-scroll-proportion="1.0771972">
+          <caret line="189" column="50" selection-start-line="189" selection-start-column="50" selection-end-line="189" selection-end-column="50" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1821#1822#0" expanded="true" />
             <element signature="e#1859#1860#0" expanded="true" />
             <element signature="e#1899#1900#0" expanded="true" />
             <element signature="e#1940#1941#0" expanded="true" />
-            <element signature="e#3473#8035#0" expanded="true" />
-            <element signature="e#6624#7490#0" expanded="true" />
-            <element signature="e#7489#7490#0" expanded="true" />
-            <element signature="e#8034#8035#0" expanded="true" />
-            <element signature="e#9636#11925#0" expanded="true" />
-            <element signature="e#11924#11925#0" expanded="true" />
+            <element signature="e#3473#8934#0" expanded="true" />
+            <element signature="e#6624#8280#0" expanded="true" />
+            <element signature="e#7373#8163#0" expanded="true" />
+            <element signature="e#8162#8163#0" expanded="true" />
+            <element signature="e#8279#8280#0" expanded="true" />
+            <element signature="e#8933#8934#0" expanded="true" />
+            <element signature="e#10535#12824#0" expanded="true" />
+            <element signature="e#12823#12824#0" expanded="true" />
           </folding>
         </state>
       </provider>

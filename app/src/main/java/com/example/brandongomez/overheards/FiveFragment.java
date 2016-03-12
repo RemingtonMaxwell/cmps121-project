@@ -166,11 +166,28 @@ public class FiveFragment extends Fragment {
                                             Log.i("overheards", "Datasaved");
                                             //remove post itself
                                             Firebase postData = database.child("posts").child(w.getPostId());
-                                            postData.removeValue();
+                                            postData.removeValue(new Firebase.CompletionListener() {
+                                                @Override
+                                                public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                                                    //remove post from user
+                                                    aa.notifyDataSetChanged();
+                                                    commentAdapter.notifyDataSetChanged();
+                                                    myListView.invalidateViews();
+                                                    cListView.invalidateViews();
+                                                    getPosts(newView);
+                                                }
+                                            });
 
                                         }
                                     }
                                 });
+                            } else {
+                                //remove post from user
+                                aa.notifyDataSetChanged();
+                                commentAdapter.notifyDataSetChanged();
+                                myListView.invalidateViews();
+                                cListView.invalidateViews();
+                                getPosts(newView);
                             }
                         }
 
@@ -179,12 +196,7 @@ public class FiveFragment extends Fragment {
                         }
                     });
 
-                    //remove post from user
-                    aa.notifyDataSetChanged();
-                    commentAdapter.notifyDataSetChanged();
-                    myListView.invalidateViews();
-                    myListView.invalidateViews();
-                    getPosts(newView);
+
                 }
 
             });
