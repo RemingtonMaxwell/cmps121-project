@@ -65,7 +65,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <Button
-                android:id="@+id/submit"
+                android:id="@+id/email_sign_in_button"
                 android:text="@string/action_sign_in"
                 android:textColor="#FFFFFF"
                 android:textSize="15sp"

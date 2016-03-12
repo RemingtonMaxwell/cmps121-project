@@ -126,15 +126,12 @@ public class PostListAdapter extends ArrayAdapter<PostElement>{
                 downvote.setClickable(false);
             }
         });
-        if(element.username.compareTo("hello")==0 || element.username.compareTo("TreeHugger")==0) {
             //convert from image string
             byte[] imageAsBytes = Base64.decode(element.profile_pic, Base64.DEFAULT);
             Bitmap bmp = BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
             Bitmap bitmap = BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
             profile.setImageBitmap(bitmap);
-        }else {
-            profile.setImageResource(R.drawable.flanfox);
-        }
+
         tv.setTextColor(Color.BLACK);
         name.setTextColor(Color.BLACK);
         tv.setText(element.content);
