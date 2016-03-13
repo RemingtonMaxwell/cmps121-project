@@ -225,6 +225,7 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
     public void onInfoWindowClick(Marker marker) {
         // TODO: make it so it goes to the appropriate Overheards screen
         Toast.makeText(this, "Info window clicked", Toast.LENGTH_SHORT).show();
+
     }
 
     public void changeView(View v) {
@@ -278,6 +279,7 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
                                         post.getLocation().getLongitude(),
                                         (String) snapshot.child("users").child(post.getUser_id()).child("userName").getValue(),
                                         post.getContent());
+                                offsetItem.setPostId(post.getPost_id());
                                     mClusterManager.addItem(offsetItem);
                             }
                         }
@@ -290,6 +292,7 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
                                             post.getLocation().getLongitude(),
                                             (String) snapshot.child("users").child(post.getUser_id()).child("userName").getValue(),
                                             post.getContent());
+                                    offsetItem.setPostId(post.getPost_id());
                                     mClusterManager.addItem(offsetItem);
                                 }
                             }
@@ -304,6 +307,7 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
                                                 post.getLocation().getLongitude(),
                                                 (String) snapshot.child("users").child(post.getUser_id()).child("userName").getValue(),
                                                 post.getContent());
+                                        offsetItem.setPostId(post.getPost_id());
                                         mClusterManager.addItem(offsetItem);
                                     }
                                 }
@@ -370,6 +374,9 @@ public class MapsActivity extends FragmentActivity implements OnInfoWindowClickL
 
         }
         */
+        Intent intent = new Intent(context, FullPost.class);
+        intent.putExtra("post_id", myItem.getPostId());
+        context.startActivity(intent);
 
     }
 

@@ -7,6 +7,7 @@ public class MyItem implements ClusterItem {
     private final LatLng mPosition;
     private final String mTitle;
     private final String mSnippet;
+    private String post_id;
 
     public MyItem(double lat, double lng, String t, String s) {
         mPosition = new LatLng(lat, lng);
@@ -25,5 +26,13 @@ public class MyItem implements ClusterItem {
 
     public String getSnippet(){
         return mSnippet;
+    }
+
+    public void setPostId(String id) {
+        post_id=id;
+    }
+
+    public String getPostId(){
+        return post_id;
     }
 }

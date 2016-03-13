@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -74,7 +76,6 @@ public class RegisterUser extends AppCompatActivity {
             try {
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                //bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 bmp.compress(Bitmap.CompressFormat.JPEG,0,stream);
                 bmp.recycle();
                 byte[] byteArray = stream.toByteArray();
@@ -139,6 +140,7 @@ public class RegisterUser extends AppCompatActivity {
         final Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/users");
         final String uName=userName;
         final String uEmail=userEmail;
+        setValidUser(true, true);
         Log.i("overheards","uname is "+uName);
         if(checkDone==false) {
             database.addValueEventListener(new ValueEventListener() {
@@ -201,8 +203,10 @@ public class RegisterUser extends AppCompatActivity {
             //Toast.makeText(getApplicationContext(), "User Name is Already in Use.", Toast.LENGTH_SHORT).show();
         } else if (validEmail==false){
             Toast.makeText(getApplicationContext(), "This Email Address is Already in Use.", Toast.LENGTH_SHORT).show();
-        }else if (isEmpty(user_name)){
+        }else if (isEmpty(user_name)) {
             Toast.makeText(getApplicationContext(), "Please Enter a User Name.", Toast.LENGTH_SHORT).show();
+        }else if (imageFile.compareTo("")==0){
+            Toast.makeText(getApplicationContext(), "Please Select a Profile Picture", Toast.LENGTH_SHORT).show();
         }else{
             createUser(first_name,last_name,user_name);
         }
@@ -229,7 +233,6 @@ public class RegisterUser extends AppCompatActivity {
         database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                Log.i("overheards", "new user");
                 User user = new User(emailAddress, user_id, new Location(mLatitude,mLongitude),
                                     firstName,lastName, userName,imageFile);
                 Firebase ref = database.child(user_id);
