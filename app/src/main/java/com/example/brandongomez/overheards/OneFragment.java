@@ -15,6 +15,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.util.Collections;
+import java.util.Date;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -23,6 +25,7 @@ import com.firebase.client.ValueEventListener;
 import com.firebase.client.Query;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -40,8 +43,7 @@ public class OneFragment extends Fragment implements AdapterView.OnItemSelectedL
     Button like;
     Button dislike;
     String spinnerdisplay = "all";
-    String spinnerdisplaydisplay = "recent";
-
+    String spinnerdisplaydisplay = "hot";
 
     public OneFragment() {
         // Required empty public constructor
@@ -89,10 +91,10 @@ public class OneFragment extends Fragment implements AdapterView.OnItemSelectedL
         Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
         Query query;
         if(spinnerdisplaydisplay.equals("recent")) {
-            query = database.orderByChild("timestamp").limitToLast(55);
+            query = database.orderByChild("timestamp").limitToFirst(50);
         }
         else{
-            query = database.orderByChild("votes").limitToFirst(55);
+            query = database.orderByChild("votes").limitToFirst(50);
         }
         // Attach an listener to read the data at our posts reference
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -100,15 +102,30 @@ public class OneFragment extends Fragment implements AdapterView.OnItemSelectedL
             public void onDataChange(DataSnapshot snapshot) {
                 aList.clear();
                 for (DataSnapshot postSnapshot : snapshot.child("posts").getChildren()) {
-                    final Post post = postSnapshot.getValue(Post.class);
-                            aList.add(0, new PostElement(post.getContent(),
-                                    (String) snapshot.child("users").child(post.getUser_id()).child("profilePic").getValue(),
-                                    (String) snapshot.child("users").child(post.getUser_id()).child("userName").getValue(),
-                                    post.getTimestamp(), String.valueOf(post.getVotes()), post.getPost_id()));
+                    Post post = postSnapshot.getValue(Post.class);
+                    Log.i("overheards spinner is ", spinnerdisplay);
+                    Log.i("overheards post ", post.getType());
+                    if(spinnerdisplay.equals("all")||(spinnerdisplay.equals("humor")&&post.getType().equals("Humor"))||
+                            (spinnerdisplay.equals("news")&&post.getType().equals("News"))||
+                            (spinnerdisplay.equals("buzz")&&post.getType().equals("Buzz"))||
+                            (spinnerdisplay.equals("gossip")&&post.getType().equals("Gossip"))||
+                            (spinnerdisplay.equals("events")&&post.getType().equals("Events"))) {
+                        aList.add(0, new PostElement(post.getContent(),
+                                (String) snapshot.child("users").child(post.getUser_id()).child("profilePic").getValue(),
+                                (String) snapshot.child("users").child(post.getUser_id()).child("userName").getValue(),
+                                post.getTimestamp(), String.valueOf(post.getVotes()), post.getPost_id()));
+                    }
+                    if(spinnerdisplaydisplay.equals("hot")){
+                        Collections.sort(aList, new votesCompare());
+                    }
+                    else{
+                        Collections.sort(aList, new dateCompare());
+                    }
 
-                            adapter.notifyDataSetChanged();
+                    adapter.notifyDataSetChanged();
                 }
             }
+
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
@@ -119,8 +136,6 @@ public class OneFragment extends Fragment implements AdapterView.OnItemSelectedL
 
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
-        String spinnerdisplay = mspin.getSelectedItem().toString();
-        String spinnerdisplaydisplay = spinDisplay.getSelectedItem().toString();
         //Toast.makeText(this.getContext(), spinnerdisplay +" "+ spinnerdisplaydisplay, Toast.LENGTH_SHORT).show();
         spinnerdisplay = mspin.getSelectedItem().toString();
         spinnerdisplaydisplay = spinDisplay.getSelectedItem().toString();
@@ -135,4 +150,6 @@ public class OneFragment extends Fragment implements AdapterView.OnItemSelectedL
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
     }
+
+
 }

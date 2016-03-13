@@ -1,9 +1,12 @@
 package com.example.brandongomez.overheards;
 
+import java.util.Comparator;
+import java.util.Date;
+
 /**
  * Created by Jolina on 3/5/2016.
  */
-public class PostElement {
+public class PostElement{
     public PostElement(){}
 
     public String content;
@@ -48,5 +51,20 @@ public class PostElement {
 
     public String getPost_id(){
         return post_id;
+    }
+
+}
+
+class votesCompare implements Comparator<PostElement> {
+    public int compare(PostElement post1, PostElement post2) {
+        return Integer.parseInt(post2.votes) - Integer.parseInt(post1.votes);
+    }
+}
+
+class dateCompare implements Comparator<PostElement> {
+    public int compare(PostElement post1, PostElement post2) {
+        Date post1Date = new Date (post1.time);
+        Date post2Date = new Date (post2.time);
+        return post2Date.compareTo(post1Date);
     }
 }

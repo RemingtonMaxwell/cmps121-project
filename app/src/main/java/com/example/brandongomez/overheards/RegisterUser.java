@@ -146,16 +146,16 @@ public class RegisterUser extends AppCompatActivity {
                 public void onDataChange(DataSnapshot snapshot) {
                     boolean vUser = true;
                     boolean vEmail = true;
-                    for (DataSnapshot users : snapshot.getChildren()) {
+                    /*for (DataSnapshot users : snapshot.getChildren()) {
                         User user = users.getValue(User.class);
                         Log.i("overheards", "user name " + user.getUserName());
-                        if ((user.getUserName()).compareTo(uName) == 0) {
+                       /* if ((user.getUserName()).compareTo(uName) == 0) {
                             vUser = false;
-                        }
-                        if (user.getEmailAddress().compareTo(uEmail) == 0) {
+                        }*/
+                       /*if (user.getEmailAddress().compareTo(uEmail) == 0) {
                             vEmail = false;
                         }
-                    }
+                    }*/
                     setValidUser(vUser, vEmail);
                 }
 
