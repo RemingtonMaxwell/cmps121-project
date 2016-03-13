@@ -97,7 +97,7 @@
         android:textColor="#FFFFFF"
         android:textSize="15sp"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_height="35dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/buttonshapepost"
         android:shadowColor="#DDFFE0"
@@ -109,7 +109,7 @@
         android:layout_alignRight="@+id/commentList"
         android:layout_alignEnd="@+id/commentList" />
     <EditText
-        android:layout_width="225dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:id="@+id/add_comment"
         android:layout_above="@+id/fp_comment_indicator"
