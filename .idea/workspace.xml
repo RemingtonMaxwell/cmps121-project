@@ -14,7 +14,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="935142a1-37a6-417e-9cfd-cadc52725a8c" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/MainActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/OneFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/OneFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="cmps121-project.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -85,11 +87,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="167" column="11" selection-start-line="167" selection-start-column="11" selection-end-line="167" selection-end-column="11" />
+            <state vertical-scroll-proportion="0.36625972">
+              <caret line="111" column="58" selection-start-line="111" selection-start-column="58" selection-end-line="111" selection-end-column="58" />
               <folding />
             </state>
           </provider>
@@ -149,14 +151,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="OneFragment.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="OneFragment.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/OneFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.54761904">
-              <caret line="141" column="9" selection-start-line="141" selection-start-column="9" selection-end-line="141" selection-end-column="9" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="109" column="96" selection-start-line="109" selection-start-column="96" selection-end-line="109" selection-end-column="96" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="strings.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-24.283018">
+              <caret line="39" column="18" selection-start-line="39" selection-start-column="14" selection-end-line="39" selection-end-column="18" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -182,19 +194,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="-3.6666667">
               <caret line="5" column="48" selection-start-line="5" selection-start-column="48" selection-end-line="5" selection-end-column="48" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="content_register_user.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/content_register_user.xml">
-          <provider editor-type-id="android-designer">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-12.933333">
-              <caret line="145" column="36" selection-start-line="145" selection-start-column="36" selection-end-line="145" selection-end-column="36" />
               <folding />
             </state>
           </provider>
@@ -2012,11 +2011,9 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/ListElement.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/MyAdapterComments.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/Post.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/FullPost.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/User.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/PostElement.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/MyItem.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/MapsActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/RegisterUser.java" />
@@ -2031,7 +2028,9 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/list_element.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/full_post.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/OneFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/MainActivity.java" />
       </list>
     </option>
   </component>
@@ -2573,7 +2572,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34377176" sideWeight="0.5012903" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.0048712594" sideWeight="0.49870968" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.34237996" sideWeight="0.49870968" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25290322" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32985386" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -2926,14 +2925,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.1132076">
-          <caret line="5" column="36" selection-start-line="5" selection-start-column="36" selection-end-line="5" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/MyItem.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -3136,21 +3127,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/MainActivity.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="167" column="11" selection-start-line="167" selection-start-column="11" selection-end-line="167" selection-end-column="11" />
+        <state vertical-scroll-proportion="-24.283018">
+          <caret line="39" column="18" selection-start-line="39" selection-start-column="14" selection-end-line="39" selection-end-column="18" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/OneFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.54761904">
-          <caret line="141" column="9" selection-start-line="141" selection-start-column="9" selection-end-line="141" selection-end-column="9" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="109" column="96" selection-start-line="109" selection-start-column="96" selection-end-line="109" selection-end-column="96" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/brandongomez/overheards/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.36625972">
+          <caret line="111" column="58" selection-start-line="111" selection-start-column="58" selection-end-line="111" selection-end-column="58" />
+          <folding />
         </state>
       </provider>
     </entry>

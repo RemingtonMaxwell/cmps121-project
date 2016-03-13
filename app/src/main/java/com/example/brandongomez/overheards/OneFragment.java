@@ -107,7 +107,7 @@ public class OneFragment extends Fragment implements AdapterView.OnItemSelectedL
                     Log.i("overheards post ", post.getType());
                     if(spinnerdisplay.equals("all")||(spinnerdisplay.equals("humor")&&post.getType().equals("Humor"))||
                             (spinnerdisplay.equals("news")&&post.getType().equals("News"))||
-                            (spinnerdisplay.equals("buzz")&&post.getType().equals("Buzz"))||
+                            (spinnerdisplay.equals("buzz")&&post.getType().equals("Announcements"))||
                             (spinnerdisplay.equals("gossip")&&post.getType().equals("Gossip"))||
                             (spinnerdisplay.equals("events")&&post.getType().equals("Events"))) {
                         aList.add(0, new PostElement(post.getContent(),
