@@ -63,7 +63,7 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <Button
+            <!--<Button
                 android:id="@+id/email_sign_in_button"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
@@ -80,6 +80,35 @@
                 android:layout_marginTop="16dp"
                 android:text="Forgot Password?"
                 android:textStyle="bold"
+                android:onClick="forgotPassword"/>-->
+            <Button
+                android:id="@+id/email_sign_in_button"
+                android:text="@string/action_sign_in"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/buttonshapepost"
+                android:shadowColor="#DDFFE0"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5" />
+
+
+            <Button
+                android:id="@+id/btn_forgot_password"
+                android:text="Forgot Password?"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/buttonshapepost"
+                android:shadowColor="#DDFFE0"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"
                 android:onClick="forgotPassword"/>
 
         </LinearLayout>

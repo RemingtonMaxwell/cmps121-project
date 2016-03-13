@@ -7,7 +7,7 @@
         android:orientation="vertical"
         android:layout_width="200dp"
         android:layout_height="match_parent"
-        android:layout_marginRight="10dp">
+        android:layout_marginRight="5dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -22,12 +22,28 @@
             android:id="@+id/itemText"
             android:layout_weight="0" />
     </LinearLayout>
-    <Button
+    <!--<Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/itemText2"
         android:text="Delete"
         android:id="@+id/delete_post"
+        android:layout_gravity="right"
+        android:layout_weight="0" />-->
+    <Button
+        android:id="@+id/delete_post"
+        android:text="Delete"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/buttonshapepost"
+        android:shadowColor="#DDFFE0"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
+        android:layout_toRightOf="@+id/itemText2"
         android:layout_gravity="right"
         android:layout_weight="0" />
 

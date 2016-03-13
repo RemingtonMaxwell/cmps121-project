@@ -30,7 +30,7 @@
         android:divider="@android:color/transparent"
         android:dividerHeight="10.0sp"/>
 
-    <Button
+    <!--<Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Settings"
@@ -40,7 +40,25 @@
         android:layout_alignParentBottom="true"
         android:layout_alignLeft="@+id/yourPosts"
         android:layout_alignStart="@+id/yourPosts"
-        android:onClick="settingsView"/>
+        android:onClick="settingsView"/>-->
+
+    <Button
+        android:text="Settings"
+        android:id="@+id/settingsButton"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:background="@drawable/buttonshapepost"
+        android:shadowColor="#DDFFE0"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
+        android:enabled="true"
+        android:onClick="settingsView"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/yourPosts"
+        android:layout_toEndOf="@+id/yourPosts" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -63,7 +81,7 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
-    <Button
+    <!--<Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Log Out"
@@ -72,7 +90,24 @@
         android:onClick="logout"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@+id/textView14"
-        android:layout_toStartOf="@+id/textView14" />
+        android:layout_toStartOf="@+id/textView14" />-->
+    <Button
+        android:text="Log Out"
+        android:id="@+id/btn_log_out"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:background="@drawable/buttonshapepost"
+        android:shadowColor="#DDFFE0"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
+        android:enabled="true"
+        android:onClick="logout"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/yourPosts"
+        android:layout_toStartOf="@+id/yourPosts" />
 
 
 </RelativeLayout>

@@ -313,6 +313,7 @@ public class FiveFragment extends Fragment {
     }
 
     private void getPosts(View v){
+        Log.i("overheards getposts", "ere");
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
         final String userID = settings.getString("user_id", null);
         Firebase database = new Firebase("https://vivid-heat-3338.firebaseio.com/");
@@ -327,6 +328,9 @@ public class FiveFragment extends Fragment {
                    // if(users.getUser_id().equals(userID)) {
                         List<String> myPosts = users.getPosts();
                         List<String> myComments = users.getComments();
+                        Log.i("overheards getposts", users.getUser_id());
+                        Log.i("overheards getposts", myPosts.toString());
+                         Log.i("overheards getposts", myComments.toString());
                         for(int i=0;i<myPosts.size();i++){
                             String post=myPosts.get(i);
                             String content=(String)snapshot.child("posts").child(post).child("content").getValue();

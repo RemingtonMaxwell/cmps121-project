@@ -62,7 +62,7 @@
         android:layout_alignStart="@+id/fp_content"
         android:layout_marginRight="200dp" />
 
-    <Button
+    <!--<Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
@@ -80,13 +80,30 @@
         android:id="@+id/fp_downvoteButton"
         android:layout_alignBottom="@+id/fp_votes"
         android:layout_toRightOf="@+id/fp_upvoteButton"
-        android:layout_toEndOf="@+id/fp_upvoteButton" />
-    <Button
+        android:layout_toEndOf="@+id/fp_upvoteButton" />-->
+    <!--<Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:text="Comment"
         android:id="@+id/fp_btn_comment"
         android:layout_height="35dp"
+        android:onClick="addComment"
+        android:layout_alignBottom="@+id/add_comment"
+        android:layout_alignRight="@+id/commentList"
+        android:layout_alignEnd="@+id/commentList" />-->
+    <Button
+        android:id="@+id/email_sign_in_button"
+        android:text="Comment"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/buttonshapepost"
+        android:shadowColor="#DDFFE0"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
         android:onClick="addComment"
         android:layout_alignBottom="@+id/add_comment"
         android:layout_alignRight="@+id/commentList"
