@@ -139,7 +139,7 @@ public class OneFragment extends Fragment implements AdapterView.OnItemSelectedL
         //Toast.makeText(this.getContext(), spinnerdisplay +" "+ spinnerdisplaydisplay, Toast.LENGTH_SHORT).show();
         spinnerdisplay = mspin.getSelectedItem().toString();
         spinnerdisplaydisplay = spinDisplay.getSelectedItem().toString();
-        Toast.makeText(this.getContext(), spinnerdisplay +" "+ spinnerdisplaydisplay, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(this.getContext(), spinnerdisplay +" "+ spinnerdisplaydisplay, Toast.LENGTH_SHORT).show();
         aList.clear();
         getPosts();
 
