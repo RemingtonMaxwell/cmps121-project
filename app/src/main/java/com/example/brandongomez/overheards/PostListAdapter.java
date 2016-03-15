@@ -104,7 +104,7 @@ public class PostListAdapter extends ArrayAdapter<PostElement>{
                         //This method will be called once with the results of the transaction.
                     }
                 });
-                upvote.setClickable(false);
+                //upvote.setClickable(false);
             }
         });
 

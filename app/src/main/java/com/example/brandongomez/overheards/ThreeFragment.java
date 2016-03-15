@@ -41,15 +41,13 @@ public class ThreeFragment extends Fragment {
     @Override
     public void onStart(){
         super.onStart();
-        //Intent intent = new Intent(getActivity(), MapsActivity.class);
-        //startActivity(intent);
+
     }
 
     @Override
     public void onResume(){
         super.onResume();
-        //Intent intent = new Intent(getActivity(), MapsActivity.class);
-        //startActivity(intent);
+
     }
 
 

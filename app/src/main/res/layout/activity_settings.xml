@@ -54,16 +54,6 @@
         android:layout_marginRight="49dp"
         android:layout_marginEnd="49dp" />
 
-    <!--<Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Update"
-        android:id="@+id/updateButton"
-        android:visibility="visible"
-        android:onClick="updateInfo"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />-->
     <Button
         android:id="@+id/updateButton"
         android:visibility="visible"

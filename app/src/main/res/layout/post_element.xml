@@ -75,25 +75,7 @@
         android:layout_alignStart="@+id/content"
         android:layout_marginRight="200dp" />
 
-    <!--<Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:text="Like"
-        android:id="@+id/upvoteButton"
-        android:layout_alignBottom="@+id/votes"
-        android:layout_alignLeft="@+id/timestamp"
-        android:layout_alignStart="@+id/timestamp" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:text="Ew"
-        android:id="@+id/downvoteButton"
-        android:layout_alignBottom="@+id/votes"
-        android:layout_toRightOf="@+id/upvoteButton"
-        android:layout_toEndOf="@+id/upvoteButton" />-->
     <Button
         android:text="Like"
         android:id="@+id/upvoteButton"

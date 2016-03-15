@@ -22,14 +22,7 @@
             android:id="@+id/itemText"
             android:layout_weight="0" />
     </LinearLayout>
-    <!--<Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/itemText2"
-        android:text="Delete"
-        android:id="@+id/delete_post"
-        android:layout_gravity="right"
-        android:layout_weight="0" />-->
+
     <Button
         android:id="@+id/delete_post"
         android:text="Delete"

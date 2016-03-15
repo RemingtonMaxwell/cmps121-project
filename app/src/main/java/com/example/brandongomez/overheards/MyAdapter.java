@@ -50,9 +50,7 @@ public class MyAdapter extends ArrayAdapter<ListElement> {
         deletePost.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-            /*Intent intent = new Intent(context, FullPost.class);
-            intent.putExtra("post_id", element.getPost_id());
-            context.startActivity(intent);*/
+
             }
             });
 

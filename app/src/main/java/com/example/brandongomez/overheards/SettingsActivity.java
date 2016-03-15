@@ -38,8 +38,6 @@ public class SettingsActivity extends AppCompatActivity {
     String user_name;
     final Firebase ref = new Firebase("https://vivid-heat-3338.firebaseio.com");
 
-    //SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-    //final SharedPreferences.Editor e = settings.edit();
 
 
     @Override
@@ -48,7 +46,6 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         View v = this.findViewById(R.id.content);
         fillSettings(v);
-        //SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
     }
 
@@ -118,7 +115,6 @@ public class SettingsActivity extends AppCompatActivity {
         {
             @Override
             public void onSuccess() {
-                //Toast.makeText(getApplicationContext(), "Updated!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -129,8 +125,6 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void updateInfo(View v){
-        /*spinner = (ProgressBar) findViewById(R.id.progressBar1);
-        spinner.setVisibility(v.VISIBLE);*/
 
         final EditText firstNameEtext = (EditText)findViewById(R.id.firstNameEtext);
         final EditText lastNameEtext = (EditText)findViewById(R.id.lastNameEtext);
@@ -142,13 +136,11 @@ public class SettingsActivity extends AppCompatActivity {
         final TextView lastNameText = (TextView)findViewById(R.id.lastNameText);
         final TextView userNameText = (TextView)findViewById(R.id.userNameText);
         final TextView emailText = (TextView)findViewById(R.id.emailText);
-        //TextView passwordText = (TextView)findViewById(R.id.passwordText);
 
         TextView txt2 = (TextView)findViewById(R.id.textView2);
         TextView txt3 = (TextView)findViewById(R.id.textView3);
         TextView txt4 = (TextView)findViewById(R.id.textView4);
         TextView txt5 = (TextView)findViewById(R.id.textView5);
-       // TextView txt6 = (TextView)findViewById(R.id.textView6);
 
         final Firebase ref = new Firebase("https://vivid-heat-3338.firebaseio.com/users");
         ref.addValueEventListener(new ValueEventListener() {
@@ -191,7 +183,6 @@ public class SettingsActivity extends AppCompatActivity {
             updateUserEmailAddress();
         }
         if(!(passwordEtext.getText().toString().equals(""))) {
-        //    passwordText.setText(passwordEtext.getText().toString());
             updatePassword();
         }
 

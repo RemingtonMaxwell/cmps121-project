@@ -33,11 +33,6 @@ public class FourFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-       // ProgressBar spinner;
-       // spinner = (ProgressBar) view.findViewById(R.id.progressBar1);
-
-        //spinner.setVisibility(View.GONE);
-        //spinner.setVisibility(View.VISIBLE);
 
     }
 

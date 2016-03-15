@@ -62,35 +62,6 @@
         android:layout_alignStart="@+id/fp_content"
         android:layout_marginRight="200dp" />
 
-    <!--<Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:text="Like"
-        android:id="@+id/fp_upvoteButton"
-        android:layout_alignBottom="@+id/fp_votes"
-        android:layout_alignLeft="@+id/fp_timestamp"
-        android:layout_alignStart="@+id/fp_timestamp" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:text="Ew"
-        android:id="@+id/fp_downvoteButton"
-        android:layout_alignBottom="@+id/fp_votes"
-        android:layout_toRightOf="@+id/fp_upvoteButton"
-        android:layout_toEndOf="@+id/fp_upvoteButton" />-->
-    <!--<Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:text="Comment"
-        android:id="@+id/fp_btn_comment"
-        android:layout_height="35dp"
-        android:onClick="addComment"
-        android:layout_alignBottom="@+id/add_comment"
-        android:layout_alignRight="@+id/commentList"
-        android:layout_alignEnd="@+id/commentList" />-->
     <Button
         android:id="@+id/email_sign_in_button"
         android:text="Comment"
